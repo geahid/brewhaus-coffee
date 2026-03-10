@@ -1,0 +1,207 @@
+{
+  "categories": [
+    { "id": "hot", "name": "Hot Drinks", "icon": "☕" },
+    { "id": "cold", "name": "Cold Drinks", "icon": "🧊" },
+    { "id": "blended", "name": "Blended", "icon": "🥤" },
+    { "id": "food", "name": "Food", "icon": "🥐" },
+    { "id": "merch", "name": "Merch", "icon": "🛍️" }
+  ],
+  "items": [
+    {
+      "id": 1, "category": "hot", "name": "Signature Espresso",
+      "description": "Rich double shot with velvety crema, our house blend roasted in-store.",
+      "price": 120, "image": "espresso.jpg",
+      "customizable": true,
+      "sizes": [
+        { "label": "Solo", "price": 0 },
+        { "label": "Doppio", "price": 30 }
+      ],
+      "milks": ["Whole Milk","Oat Milk","Almond Milk","Soy Milk","Coconut Milk"],
+      "extras": [
+        { "label": "Extra Shot", "price": 40 },
+        { "label": "Vanilla Syrup", "price": 20 },
+        { "label": "Caramel Drizzle", "price": 20 },
+        { "label": "Hazelnut Syrup", "price": 20 }
+      ],
+      "popular": true
+    },
+    {
+      "id": 2, "category": "hot", "name": "Flat White",
+      "description": "Microfoam milk poured over a ristretto shot for a silky, intense experience.",
+      "price": 160, "image": "flatwhite.jpg",
+      "customizable": true,
+      "sizes": [
+        { "label": "Regular", "price": 0 },
+        { "label": "Large", "price": 30 }
+      ],
+      "milks": ["Whole Milk","Oat Milk","Almond Milk","Soy Milk","Coconut Milk"],
+      "extras": [
+        { "label": "Extra Shot", "price": 40 },
+        { "label": "Vanilla Syrup", "price": 20 },
+        { "label": "Caramel Drizzle", "price": 20 }
+      ],
+      "popular": true
+    },
+    {
+      "id": 3, "category": "hot", "name": "Pour Over",
+      "description": "Single origin beans, hand-poured to order. Clean, bright, and complex.",
+      "price": 200, "image": "pourover.jpg",
+      "customizable": false,
+      "sizes": [
+        { "label": "Regular", "price": 0 }
+      ],
+      "milks": [],
+      "extras": [],
+      "popular": false
+    },
+    {
+      "id": 4, "category": "hot", "name": "Café Latte",
+      "description": "Espresso with steamed milk and a light layer of foam. A classic comfort drink.",
+      "price": 150, "image": "latte.jpg",
+      "customizable": true,
+      "sizes": [
+        { "label": "Small", "price": 0 },
+        { "label": "Medium", "price": 25 },
+        { "label": "Large", "price": 45 }
+      ],
+      "milks": ["Whole Milk","Oat Milk","Almond Milk","Soy Milk","Coconut Milk"],
+      "extras": [
+        { "label": "Extra Shot", "price": 40 },
+        { "label": "Vanilla Syrup", "price": 20 },
+        { "label": "Brown Sugar Syrup", "price": 20 }
+      ],
+      "popular": true
+    },
+    {
+      "id": 5, "category": "cold", "name": "Cold Brew",
+      "description": "Steeped 18 hours in cold water. Smooth, less acidic, naturally sweet.",
+      "price": 180, "image": "coldbrew.jpg",
+      "customizable": true,
+      "sizes": [
+        { "label": "Regular", "price": 0 },
+        { "label": "Large", "price": 40 }
+      ],
+      "milks": ["None","Whole Milk","Oat Milk"],
+      "extras": [
+        { "label": "Vanilla Sweet Cream", "price": 35 },
+        { "label": "Brown Sugar Syrup", "price": 20 }
+      ],
+      "popular": true
+    },
+    {
+      "id": 6, "category": "cold", "name": "Iced Americano",
+      "description": "Double espresso over ice, topped with cold water. Bold and refreshing.",
+      "price": 140, "image": "americano.jpg",
+      "customizable": true,
+      "sizes": [
+        { "label": "Regular", "price": 0 },
+        { "label": "Large", "price": 30 }
+      ],
+      "milks": [],
+      "extras": [
+        { "label": "Extra Shot", "price": 40 },
+        { "label": "Vanilla Syrup", "price": 20 }
+      ],
+      "popular": false
+    },
+    {
+      "id": 7, "category": "cold", "name": "Iced Matcha Latte",
+      "description": "Ceremonial grade matcha whisked with your choice of milk over ice.",
+      "price": 190, "image": "matcha.jpg",
+      "customizable": true,
+      "sizes": [
+        { "label": "Regular", "price": 0 },
+        { "label": "Large", "price": 35 }
+      ],
+      "milks": ["Oat Milk","Whole Milk","Almond Milk","Coconut Milk"],
+      "extras": [
+        { "label": "Vanilla Syrup", "price": 20 },
+        { "label": "Brown Sugar Syrup", "price": 20 }
+      ],
+      "popular": true
+    },
+    {
+      "id": 8, "category": "blended", "name": "Mocha Frappé",
+      "description": "Coffee, chocolate, milk, and ice blended to perfection. Topped with whip.",
+      "price": 210, "image": "mocha.jpg",
+      "customizable": true,
+      "sizes": [
+        { "label": "Medium", "price": 0 },
+        { "label": "Large", "price": 40 }
+      ],
+      "milks": ["Whole Milk","Oat Milk","Almond Milk"],
+      "extras": [
+        { "label": "Whipped Cream", "price": 25 },
+        { "label": "Extra Chocolate", "price": 20 },
+        { "label": "Extra Shot", "price": 40 }
+      ],
+      "popular": true
+    },
+    {
+      "id": 9, "category": "blended", "name": "Caramel Crunch",
+      "description": "Blended caramel latte with toffee bits, drizzled with salted caramel sauce.",
+      "price": 230, "image": "caramel.jpg",
+      "customizable": true,
+      "sizes": [
+        { "label": "Medium", "price": 0 },
+        { "label": "Large", "price": 40 }
+      ],
+      "milks": ["Whole Milk","Oat Milk"],
+      "extras": [
+        { "label": "Whipped Cream", "price": 25 },
+        { "label": "Extra Caramel", "price": 20 }
+      ],
+      "popular": false
+    },
+    {
+      "id": 10, "category": "food", "name": "Butter Croissant",
+      "description": "Flaky, buttery layers baked fresh every morning. Best paired with espresso.",
+      "price": 95, "image": "croissant.jpg",
+      "customizable": false,
+      "sizes": [],
+      "milks": [],
+      "extras": [],
+      "popular": true
+    },
+    {
+      "id": 11, "category": "food", "name": "Avocado Toast",
+      "description": "Smashed avo on sourdough with chili flakes, lemon, and microgreens.",
+      "price": 195, "image": "avotoast.jpg",
+      "customizable": false,
+      "sizes": [],
+      "milks": [],
+      "extras": [],
+      "popular": false
+    },
+    {
+      "id": 12, "category": "food", "name": "Banana Walnut Loaf",
+      "description": "House-baked banana bread studded with toasted walnuts. Served warm.",
+      "price": 120, "image": "bananabread.jpg",
+      "customizable": false,
+      "sizes": [],
+      "milks": [],
+      "extras": [],
+      "popular": true
+    },
+    {
+      "id": 13, "category": "merch", "name": "Brewhaus Tumbler",
+      "description": "Double-wall vacuum insulated 16oz stainless steel tumbler. Keeps cold 24hrs.",
+      "price": 850, "image": "tumbler.jpg",
+      "customizable": false,
+      "sizes": [],
+      "milks": [],
+      "extras": [],
+      "popular": false
+    },
+    {
+      "id": 14, "category": "merch", "name": "Canvas Tote Bag",
+      "description": "100% organic cotton tote with our hand-drawn bean illustration print.",
+      "price": 350, "image": "tote.jpg",
+      "customizable": false,
+      "sizes": [],
+      "milks": [],
+      "extras": [],
+      "popular": false
+    }
+  ]
+}

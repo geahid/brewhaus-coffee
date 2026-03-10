@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — Brewhaus Coffee</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><span class="nav-logo-dot"></span>Brewhaus</a>
+    <ul class="nav-links">
+      <li><a href="/menu">Menu</a></li>
+      <li><a href="#" id="authNavLink">Sign In</a></li>
+      <li><a href="/cart" class="nav-cart">🛒 Cart <span class="cart-badge">0</span></a></li>
+    </ul>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div style="background:var(--ink);padding:40px 28px 36px;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(200,135,58,0.07),transparent);"></div>
+  <div class="container" style="position:relative;">
+    <a href="/cart" style="color:rgba(253,246,236,0.4);text-decoration:none;font-size:0.85rem;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;">← Back to Cart</a>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--cream);font-weight:600;">Checkout</h1>
+  </div>
+</div>
+
+<div class="container" style="padding-top:44px;padding-bottom:80px;">
+  <div id="emptyWrap" style="display:none;">
+    <div class="empty-state"><span class="icon">🛒</span><h3>Nothing to checkout</h3><a href="/menu" class="btn btn-primary" style="margin-top:16px;">Browse Menu</a></div>
+  </div>
+  <div class="checkout-layout" id="checkoutWrap">
+    <div>
+      <!-- Order type -->
+      <div class="card" style="padding:28px;margin-bottom:24px;">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;">How do you want it?</h3>
+        <div class="type-grid">
+          <div class="type-card active" id="pickupCard" onclick="setType('pickup')">
+            <div class="ticon">🏠</div><div class="tlabel">Pick Up</div><div class="tsub">Ready in ~15 min</div>
+          </div>
+          <div class="type-card" id="deliveryCard" onclick="setType('delivery')">
+            <div class="ticon">🏍️</div><div class="tlabel">Delivery</div><div class="tsub">+₱60 delivery fee</div>
+          </div>
+        </div>
+        <div id="pickupSec">
+          <div class="form-group"><label>Preferred Pickup Time</label>
+            <select id="pickupTime">
+              <option value="asap">As soon as possible (~15 min)</option>
+              <option value="30min">In 30 minutes</option>
+              <option value="1hr">In 1 hour</option>
+            </select>
+          </div>
+        </div>
+        <div id="deliverySec" style="display:none;">
+          <div class="form-group"><label>Delivery Address</label><textarea id="delAddr" rows="2" placeholder="Street, Barangay, Cotabato City"></textarea></div>
+          <div class="form-group"><label>Notes (optional)</label><input type="text" id="delNotes" placeholder="Landmark, gate code, etc."></div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="card" style="padding:28px;margin-bottom:24px;">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;">Contact Details</h3>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" id="fname" placeholder="Juan"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" id="lname" placeholder="dela Cruz"></div>
+        </div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="phone" placeholder="09XX XXX XXXX"></div>
+        <div class="form-group"><label>Email (receipt)</label><input type="email" id="email" placeholder="you@email.com"></div>
+      </div>
+
+      <!-- Payment -->
+      <div class="card" style="padding:28px;">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;">Payment Method</h3>
+        <div class="pay-grid">
+          <div class="pay-card active" data-m="cash" onclick="setPay(this)">💵 Cash</div>
+          <div class="pay-card" data-m="gcash" onclick="setPay(this)">📱 GCash</div>
+          <div class="pay-card" data-m="maya" onclick="setPay(this)">💳 Maya</div>
+          <div class="pay-card" data-m="card" onclick="setPay(this)">🏦 Card</div>
+        </div>
+        <div id="gcashBox" style="display:none;" class="info-box"><strong>GCash:</strong> 0917 123 4567<br><span style="color:var(--text-muted);font-size:0.82rem;">Send payment before completing order.</span></div>
+        <div id="mayaBox" style="display:none;" class="info-box"><strong>Maya:</strong> 0917 987 6543<br><span style="color:var(--text-muted);font-size:0.82rem;">Include order number as reference.</span></div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div style="position:sticky;top:84px;">
+      <div class="card" style="padding:28px;">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:20px;">Order Summary</h3>
+        <div id="summaryItems"></div>
+        <div style="border-top:1px solid rgba(200,135,58,0.1);margin:16px 0;padding-top:16px;">
+          <div class="summary-row"><span style="color:var(--text-muted);">Subtotal</span><span id="sumSub">₱0</span></div>
+          <div class="summary-row" id="sumDiscRow" style="display:none;color:var(--success);"><span>Discount (<span id="promoLbl"></span>)</span><span id="sumDisc"></span></div>
+          <div class="summary-row" id="sumDelRow" style="display:none;"><span>Delivery</span><span>₱60</span></div>
+          <div class="summary-row summary-total"><span>Total</span><span id="sumTotal">₱0</span></div>
+        </div>
+        <button class="btn btn-primary btn-block" style="font-size:1rem;padding:16px;" id="placeBtn" onclick="placeOrder()">Place Order ✓</button>
+        <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:12px;">By ordering you agree to our terms of service.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+let orderType='pickup', payMethod='cash';
+const promo = localStorage.getItem('brewhaus_promo');
+
+function setType(t) {
+  orderType=t;
+  document.getElementById('pickupCard').classList.toggle('active',t==='pickup');
+  document.getElementById('deliveryCard').classList.toggle('active',t==='delivery');
+  document.getElementById('pickupSec').style.display=t==='pickup'?'block':'none';
+  document.getElementById('deliverySec').style.display=t==='delivery'?'block':'none';
+  document.getElementById('sumDelRow').style.display=t==='delivery'?'flex':'none';
+  calcTotal();
+}
+
+function setPay(el) {
+  document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); payMethod=el.dataset.m;
+  document.getElementById('gcashBox').style.display=payMethod==='gcash'?'block':'none';
+  document.getElementById('mayaBox').style.display=payMethod==='maya'?'block':'none';
+}
+
+function getDiscount(sub) {
+  if (promo==='BREW10') return Math.floor(sub*0.1);
+  if (promo==='WELCOME') return 50;
+  return 0;
+}
+
+function calcTotal() {
+  const sub=Cart.subtotal, disc=getDiscount(sub), del=orderType==='delivery'?60:0;
+  document.getElementById('sumSub').textContent=formatPrice(sub);
+  document.getElementById('sumTotal').textContent=formatPrice(sub-disc+del);
+  const dr=document.getElementById('sumDiscRow');
+  if (disc>0&&promo) { dr.style.display='flex'; document.getElementById('sumDisc').textContent=`-${formatPrice(disc)}`; document.getElementById('promoLbl').textContent=promo; }
+}
+
+function renderSummaryItems() {
+  const el=document.getElementById('summaryItems');
+  el.innerHTML=Cart.items.map(i=>`
+    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(200,135,58,0.06);gap:10px;">
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="font-size:1.2rem;">${EMOJIS[i.category]||'☕'}</span>
+        <div>
+          <div style="font-weight:600;font-size:0.875rem;">${i.name} × ${i.qty}</div>
+          ${i.mods&&i.mods.length?`<div style="font-size:0.75rem;color:var(--text-muted);">${i.mods.join(' · ')}</div>`:''}
+        </div>
+      </div>
+      <span style="font-weight:700;font-size:0.9rem;white-space:nowrap;">${formatPrice(i.totalPrice*i.qty)}</span>
+    </div>`).join('');
+}
+
+async function placeOrder() {
+  const fname=document.getElementById('fname').value.trim();
+  const lname=document.getElementById('lname').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const email=document.getElementById('email').value.trim();
+  if (!fname||!lname||!phone) { Toast.show('Please fill in name and phone','error'); return; }
+  if (orderType==='delivery'&&!document.getElementById('delAddr').value.trim()) { Toast.show('Enter delivery address','error'); return; }
+  const btn=document.getElementById('placeBtn'); btn.disabled=true; btn.textContent='Placing Order...';
+  try {
+    const res=await fetch('/api/orders',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        items:Cart.items,
+        customer:{firstName:fname,lastName:lname,name:`${fname} ${lname}`,phone,email},
+        paymentMethod:payMethod, orderType,
+        pickupTime:orderType==='pickup'?document.getElementById('pickupTime').value:null,
+        address:orderType==='delivery'?document.getElementById('delAddr').value.trim():null,
+        promoCode:promo||null
+      })
+    });
+    const data=await res.json();
+    if (data.order) {
+      Cart.clear(); localStorage.removeItem('brewhaus_promo');
+      window.location.href=`/orders?id=${data.order.id}`;
+    } else { Toast.show(data.error||'Order failed','error'); btn.disabled=false; btn.textContent='Place Order ✓'; }
+  } catch { Toast.show('Network error','error'); btn.disabled=false; btn.textContent='Place Order ✓'; }
+}
+
+if (Cart.items.length===0) {
+  document.getElementById('emptyWrap').style.display='block';
+  document.getElementById('checkoutWrap').style.display='none';
+} else {
+  renderSummaryItems(); calcTotal();
+  if (Auth.user) {
+    const p=Auth.user.name.split(' ');
+    document.getElementById('fname').value=p[0]||'';
+    document.getElementById('lname').value=p.slice(1).join(' ')||'';
+    document.getElementById('email').value=Auth.user.email||'';
+  }
+}
+</script>
+</body>
+</html>

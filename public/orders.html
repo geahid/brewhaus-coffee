@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Tracking — Brewhaus Coffee</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><span class="nav-logo-dot"></span>Brewhaus</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li><li><a href="/menu">Menu</a></li>
+      <li><a href="/orders" class="active">My Orders</a></li>
+      <li><a href="#" id="authNavLink">Sign In</a></li>
+      <li><a href="/cart" class="nav-cart">🛒 Cart <span class="cart-badge">0</span></a></li>
+    </ul>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div style="background:var(--ink);padding:40px 28px 36px;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(200,135,58,0.07),transparent);"></div>
+  <div class="container" style="position:relative;">
+    <div class="section-label" style="margin-bottom:10px;">Real-Time</div>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--cream);font-weight:600;">Order Tracking</h1>
+    <p style="color:rgba(253,246,236,0.4);font-weight:300;margin-top:6px;">Know exactly when your coffee is ready.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-top:44px;padding-bottom:80px;">
+  <div class="card" style="padding:28px;max-width:520px;margin-bottom:40px;">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:14px;">Track an Order</h3>
+    <div style="display:flex;gap:10px;">
+      <input type="text" id="trackInput" placeholder="Order ID or short code (e.g. AB12CD)" style="flex:1;text-transform:uppercase;">
+      <button class="btn btn-primary" style="white-space:nowrap;" onclick="trackOrder()">Track</button>
+    </div>
+  </div>
+
+  <div id="trackedOrder" style="display:none;margin-bottom:44px;"></div>
+
+  <div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;margin-bottom:24px;">Order History</h2>
+    <div id="historyOrders"><div class="loader"><div class="spinner"></div></div></div>
+  </div>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+const STEPS = ['pending','preparing','ready','completed'];
+const STEP_LABELS = {pending:'Order Received',preparing:'Being Prepared',ready:'Ready for Pickup',completed:'Completed',cancelled:'Cancelled'};
+const STEP_ICONS = {pending:'📋',preparing:'👨‍🍳',ready:'✅',completed:'🎉',cancelled:'❌'};
+
+function renderOrderCard(o) {
+  const cur = STEPS.indexOf(o.status);
+  const stepsHTML = o.status!=='cancelled' ? STEPS.map((s,i)=>`
+    <div class="track-step">
+      <div class="step-dot ${i<cur?'done':i===cur?'active':''}">
+        ${i<cur?'✓':STEP_ICONS[s]}
+      </div>
+      <div class="step-body">
+        <div class="step-lbl" style="color:${i<=cur?'var(--ink)':'var(--text-muted)'};">${STEP_LABELS[s]}</div>
+        ${i===0&&o.estimatedWait?`<div class="step-sub">Est. wait: ${o.estimatedWait} minutes</div>`:''}
+      </div>
+    </div>`).join('') :
+    `<div class="badge badge-cancelled" style="font-size:0.875rem;padding:10px 16px;">Order Cancelled</div>`;
+
+  return `
+    <div class="card" style="overflow:hidden;">
+      <div style="background:var(--ink);padding:22px 28px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;">
+        <div>
+          <div style="color:rgba(253,246,236,0.4);font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;">Order #${o.shortId}</div>
+          <div style="color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-top:4px;">${o.customer.name}</div>
+          <div style="color:rgba(253,246,236,0.4);font-size:0.8rem;margin-top:2px;">${formatDate(o.createdAt)}</div>
+        </div>
+        <div style="text-align:right;">
+          <span class="badge badge-${o.status}">${STEP_LABELS[o.status]||o.status}</span>
+          <div style="font-family:'Cormorant Garamond',serif;color:var(--caramel);font-size:1.5rem;font-weight:700;margin-top:8px;">${formatPrice(o.total)}</div>
+        </div>
+      </div>
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+        <div>
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:16px;">Items Ordered</div>
+          ${o.items.map(item=>`
+            <div style="display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;">
+              <span style="font-size:1.2rem;flex-shrink:0;">${EMOJIS[item.category]||'☕'}</span>
+              <div>
+                <div style="font-weight:600;font-size:0.9rem;">${item.name} × ${item.qty}</div>
+                ${item.mods&&item.mods.length?`<div style="font-size:0.75rem;color:var(--text-muted);">${item.mods.join(' · ')}</div>`:''}
+              </div>
+            </div>`).join('')}
+        </div>
+        <div>
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:16px;">Status</div>
+          <div class="track-steps">${stepsHTML}</div>
+        </div>
+      </div>
+      <div style="padding:16px 28px;border-top:1px solid rgba(200,135,58,0.08);display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <button class="btn btn-outline-dark btn-sm" onclick="reorder('${o.id}')">🔄 Reorder</button>
+        <span style="font-size:0.8rem;color:var(--text-muted);">${o.orderType==='delivery'?'🏍️ Delivery':'🏠 Pickup'} · ${o.paymentMethod?.toUpperCase()}</span>
+      </div>
+    </div>`;
+}
+
+async function trackOrder() {
+  const id = document.getElementById('trackInput').value.trim();
+  if (!id) return;
+  try {
+    const res=await fetch(`/api/orders/${id}`); const o=await res.json();
+    if (o.error) { Toast.show('Order not found','error'); return; }
+    document.getElementById('trackedOrder').style.display='block';
+    document.getElementById('trackedOrder').innerHTML=`
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:20px;">Tracked Order</h2>
+      ${renderOrderCard(o)}`;
+  } catch { Toast.show('Failed to find order','error'); }
+}
+
+async function reorder(id) {
+  const res=await fetch(`/api/orders/${id}/reorder`,{method:'POST'});
+  const d=await res.json();
+  if (d.items) { d.items.forEach(i=>Cart.add({...i})); Toast.show('Items added to cart!'); setTimeout(()=>window.location.href='/cart',800); }
+}
+
+async function loadHistory() {
+  const el=document.getElementById('historyOrders');
+  try {
+    const res=await fetch('/api/orders'); const orders=await res.json();
+    if (!orders.length) {
+      el.innerHTML=`<div class="empty-state"><span class="icon">📋</span><h3>No orders yet</h3><p style="margin-bottom:24px;">Your order history will appear here</p><a href="/menu" class="btn btn-primary">Order Now</a></div>`;
+      return;
+    }
+    el.innerHTML=orders.map(o=>`<div style="margin-bottom:24px;">${renderOrderCard(o)}</div>`).join('');
+  } catch { el.innerHTML='<p style="color:var(--text-muted);">Sign in to see your order history.</p>'; }
+}
+
+const urlId=new URLSearchParams(window.location.search).get('id');
+if (urlId) { document.getElementById('trackInput').value=urlId; trackOrder(); setInterval(trackOrder,30000); }
+loadHistory();
+</script>
+</body>
+</html>
