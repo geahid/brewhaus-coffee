@@ -1,200 +1,1376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brewhaus — Specialty Coffee, Order Online</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brewhaus — Specialty Coffee</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#080604;--ink-soft:#0f0d0a;--ink-mid:#161310;
+  --caramel:#C8873A;--gold:#D4AF6A;--cream:#FDF6EC;
+  --border:rgba(200,135,58,0.15);--danger:#B83A2A;
+  --shadow-xl:0 24px 64px rgba(0,0,0,0.6);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--ink);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:'DM Sans',sans-serif;}
+input,select,textarea{font-family:'DM Sans',sans-serif;width:100%;padding:12px 16px;background:rgba(253,246,236,0.05);border:1px solid var(--border);border-radius:10px;color:var(--cream);font-size:0.9rem;outline:none;transition:border 0.2s;}
+input:focus,select:focus,textarea:focus{border-color:var(--caramel);}
+input::placeholder,textarea::placeholder{color:rgba(253,246,236,0.25);}
+select option{background:var(--ink-soft);}
+label{display:block;font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:rgba(253,246,236,0.4);margin-bottom:7px;}
+.form-group{margin-bottom:16px;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:68px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,6,4,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--caramel);display:flex;align-items:center;gap:8px;}
+.nav-links{display:flex;align-items:center;gap:6px;list-style:none;}
+.nav-links a{padding:7px 14px;border-radius:8px;font-size:0.875rem;font-weight:500;color:rgba(253,246,236,0.55);transition:all 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--cream);background:rgba(253,246,236,0.07);}
+.nav-cart{position:relative;}
+.cart-badge{background:var(--caramel);color:var(--ink);font-size:0.65rem;font-weight:700;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;margin-left:4px;}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh;padding-top:68px;}
+.page.active{display:block;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:100px 0 60px;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 60% 50%,rgba(200,135,58,0.08),transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(200,135,58,0.04),transparent 50%);}
+.hero-img{position:absolute;right:0;top:0;bottom:0;width:50%;object-fit:cover;opacity:0.25;mask-image:linear-gradient(to left,rgba(0,0,0,0.8),transparent);}
+.container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.hero-content{max-width:600px;position:relative;z-index:2;}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(200,135,58,0.1);border:1px solid rgba(200,135,58,0.25);border-radius:50px;padding:6px 16px;font-size:0.78rem;font-weight:600;color:var(--caramel);letter-spacing:1px;text-transform:uppercase;margin-bottom:28px;}
+.hero-pill-dot{width:6px;height:6px;background:var(--caramel);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.3);}}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,5.5rem);font-weight:600;line-height:1.05;color:var(--cream);margin-bottom:24px;}
+.hero h1 em{font-style:italic;color:var(--caramel);}
+.hero-sub{font-size:1.05rem;color:rgba(253,246,236,0.45);font-weight:300;line-height:1.8;margin-bottom:40px;max-width:480px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-cards{display:flex;gap:14px;margin-top:60px;}
+.hero-card{background:rgba(253,246,236,0.04);border:1px solid var(--border);border-radius:14px;padding:16px 22px;text-align:center;}
+.hero-card-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--caramel);}
+.hero-card-lbl{font-size:0.72rem;color:rgba(253,246,236,0.35);text-transform:uppercase;letter-spacing:1px;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:10px;font-size:0.875rem;font-weight:600;border:none;transition:all 0.2s;cursor:pointer;text-decoration:none;}
+.btn-primary{background:linear-gradient(135deg,var(--caramel),var(--gold));color:var(--ink);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,135,58,0.35);}
+.btn-outline{background:transparent;border:1px solid rgba(253,246,236,0.2);color:var(--cream);}
+.btn-outline:hover{border-color:var(--caramel);color:var(--caramel);}
+.btn-sm{padding:8px 16px;font-size:0.8rem;}
+.btn-block{width:100%;}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;}
+
+/* ── SECTION ── */
+.section{padding:80px 0;}
+.section-label{display:flex;align-items:center;gap:10px;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--caramel);margin-bottom:14px;}
+.section-label::before{content:'';width:28px;height:1px;background:var(--caramel);}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:600;color:var(--cream);margin-bottom:12px;}
+.section-sub{color:rgba(253,246,236,0.4);font-weight:300;margin-bottom:48px;}
+
+/* ── FEATURES STRIP ── */
+.features{background:var(--ink-soft);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 0;}
+.features-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.feature{display:flex;align-items:center;gap:14px;padding:16px 28px;border-right:1px solid var(--border);}
+.feature:last-child{border-right:none;}
+.feature-icon{font-size:1.5rem;}
+.feature-title{font-weight:600;font-size:0.9rem;color:var(--cream);}
+.feature-desc{font-size:0.78rem;color:rgba(253,246,236,0.35);}
+
+/* ── MENU GRID ── */
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
+.menu-card{background:var(--ink-soft);border:1px solid var(--border);border-radius:18px;overflow:hidden;cursor:pointer;transition:all 0.3s;}
+.menu-card:hover{transform:translateY(-4px);border-color:rgba(200,135,58,0.3);box-shadow:0 20px 48px rgba(0,0,0,0.4);}
+.menu-card-img{height:200px;position:relative;overflow:hidden;background:var(--ink-mid);}
+.menu-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+.menu-card:hover .menu-card-img img{transform:scale(1.06);}
+.menu-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,var(--ink-mid),var(--ink-soft));}
+.card-badge{position:absolute;top:12px;left:12px;background:var(--caramel);color:var(--ink);font-size:0.65rem;font-weight:700;padding:4px 10px;border-radius:50px;text-transform:uppercase;letter-spacing:1px;}
+.sold-out-overlay{position:absolute;inset:0;background:rgba(8,6,4,0.75);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;letter-spacing:2px;color:rgba(253,246,236,0.5);}
+.menu-card-body{padding:18px;}
+.card-cat{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--caramel);margin-bottom:6px;}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--cream);margin-bottom:6px;}
+.card-desc{font-size:0.82rem;color:rgba(253,246,236,0.35);line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-footer{display:flex;justify-content:space-between;align-items:center;}
+.card-price{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--caramel);}
+.card-price small{font-size:0.7rem;color:rgba(253,246,236,0.3);font-family:'DM Sans',sans-serif;}
+
+/* ── CATS BAR ── */
+.cats-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+.cat-btn{padding:8px 18px;border-radius:50px;border:1px solid var(--border);background:transparent;color:rgba(253,246,236,0.45);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.cat-btn:hover,.cat-btn.active{background:rgba(200,135,58,0.12);border-color:var(--caramel);color:var(--caramel);}
+
+/* ── PAGE HEADER ── */
+.page-header{padding:48px 0 36px;background:linear-gradient(to bottom,rgba(200,135,58,0.05),transparent);border-bottom:1px solid var(--border);margin-bottom:0;}
+
+/* ── CARD ── */
+.card{background:var(--ink-soft);border:1px solid var(--border);border-radius:18px;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--ink-soft);border-radius:24px 24px 0 0;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-img{width:100%;height:240px;object-fit:cover;}
+.modal-img-placeholder{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:5rem;background:var(--ink-mid);}
+.modal-body{padding:24px;}
+.modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:var(--cream);}
+.modal-close{width:34px;height:34px;border-radius:50%;background:rgba(253,246,236,0.08);border:none;color:rgba(253,246,236,0.5);font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.modal-desc{color:rgba(253,246,236,0.4);font-size:0.875rem;line-height:1.7;margin-bottom:20px;}
+.modal-sec{margin-bottom:20px;}
+.modal-sec-lbl{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(253,246,236,0.3);margin-bottom:10px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:7px 16px;border-radius:50px;border:1px solid var(--border);background:transparent;color:rgba(253,246,236,0.5);font-size:0.82rem;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.chip.selected,.chip:hover{background:rgba(200,135,58,0.12);border-color:var(--caramel);color:var(--caramel);}
+.extra-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all 0.2s;margin-bottom:8px;}
+.extra-row:hover,.extra-row.selected{background:rgba(200,135,58,0.08);border-color:var(--caramel);}
+.extra-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.65rem;margin-right:10px;transition:all 0.2s;color:transparent;}
+.extra-row.selected .extra-check{background:var(--caramel);border-color:var(--caramel);color:var(--ink);}
+.qty-ctrl{display:inline-flex;align-items:center;gap:0;background:rgba(253,246,236,0.05);border:1px solid var(--border);border-radius:50px;overflow:hidden;}
+.qty-btn{width:38px;height:38px;border:none;background:transparent;color:var(--cream);font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;}
+.qty-btn:hover{background:rgba(200,135,58,0.15);}
+.qty-num{min-width:36px;text-align:center;font-weight:700;color:var(--cream);}
+.modal-foot{padding:20px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px;position:sticky;bottom:0;background:var(--ink-soft);}
+.modal-price{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--caramel);}
+.modal-price-lbl{font-size:0.7rem;color:rgba(253,246,236,0.3);text-transform:uppercase;letter-spacing:1px;}
+
+/* ── CART ── */
+.cart-layout{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start;}
+.cart-item{display:flex;gap:16px;padding:18px 24px;border-bottom:1px solid rgba(200,135,58,0.07);align-items:flex-start;}
+.cart-thumb{width:64px;height:64px;border-radius:12px;overflow:hidden;flex-shrink:0;background:var(--ink-mid);display:flex;align-items:center;justify-content:center;font-size:1.8rem;}
+.cart-thumb img{width:100%;height:100%;object-fit:cover;}
+.cart-info{flex:1;}
+.cart-name{font-weight:600;color:var(--cream);margin-bottom:3px;}
+.cart-mods{font-size:0.78rem;color:rgba(253,246,236,0.3);margin-bottom:10px;}
+.cart-controls{display:flex;align-items:center;gap:10px;}
+.mini-btn{width:28px;height:28px;border-radius:50%;background:rgba(253,246,236,0.07);border:1px solid var(--border);color:var(--cream);font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.remove-btn{font-size:0.75rem;color:rgba(253,246,236,0.3);background:none;border:none;cursor:pointer;padding:4px 8px;}
+.remove-btn:hover{color:var(--danger);}
+.cart-price{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--caramel);white-space:nowrap;}
+.order-summary{position:sticky;top:84px;}
+.summary-row{display:flex;justify-content:space-between;padding:8px 0;font-size:0.9rem;color:rgba(253,246,236,0.45);}
+.summary-total{border-top:1px solid var(--border);padding-top:14px;font-weight:700;font-size:1rem;color:var(--cream);}
+.promo-wrap{display:flex;gap:8px;margin-bottom:16px;}
+.promo-wrap input{flex:1;}
+
+/* ── CHECKOUT ── */
+.checkout-layout{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start;}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.type-card{padding:18px;border-radius:14px;border:2px solid var(--border);cursor:pointer;text-align:center;transition:all 0.2s;}
+.type-card:hover,.type-card.active{border-color:var(--caramel);background:rgba(200,135,58,0.06);}
+.ticon{font-size:1.8rem;margin-bottom:6px;}
+.tlabel{font-weight:600;color:var(--cream);font-size:0.9rem;}
+.tsub{font-size:0.75rem;color:rgba(253,246,236,0.35);}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.pay-card{padding:12px;border-radius:10px;border:2px solid var(--border);cursor:pointer;text-align:center;font-size:0.875rem;font-weight:500;color:rgba(253,246,236,0.5);transition:all 0.2s;}
+.pay-card:hover,.pay-card.active{border-color:var(--caramel);color:var(--caramel);background:rgba(200,135,58,0.06);}
+.info-box{background:rgba(200,135,58,0.06);border:1px solid rgba(200,135,58,0.2);border-radius:10px;padding:14px;font-size:0.85rem;color:rgba(253,246,236,0.5);margin-top:10px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* ── ORDERS ── */
+.track-steps{display:flex;flex-direction:column;gap:14px;}
+.track-step{display:flex;gap:12px;align-items:flex-start;}
+.step-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;color:rgba(253,246,236,0.3);}
+.step-dot.active{border-color:var(--caramel);background:rgba(200,135,58,0.12);color:var(--caramel);}
+.step-dot.done{border-color:rgba(52,211,153,0.5);background:rgba(52,211,153,0.1);color:#34D399;}
+.step-lbl{font-weight:500;font-size:0.875rem;color:rgba(253,246,236,0.4);}
+.step-lbl.active-lbl{color:var(--cream);}
+.step-sub{font-size:0.75rem;color:rgba(253,246,236,0.25);}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:50px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.badge-pending{background:rgba(234,179,8,0.12);color:#EAB308;border:1px solid rgba(234,179,8,0.2);}
+.badge-preparing{background:rgba(59,130,246,0.12);color:#60A5FA;border:1px solid rgba(59,130,246,0.2);}
+.badge-ready{background:rgba(52,211,153,0.12);color:#34D399;border:1px solid rgba(52,211,153,0.2);}
+.badge-completed{background:rgba(200,135,58,0.12);color:var(--caramel);border:1px solid rgba(200,135,58,0.2);}
+.badge-cancelled{background:rgba(184,58,42,0.12);color:#F87171;border:1px solid rgba(184,58,42,0.2);}
+.badge-popular{background:var(--caramel);color:var(--ink);}
+
+/* ── ADMIN ── */
+.admin-wrap{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+.admin-side{background:var(--ink-soft);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;}
+.admin-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--caramel);font-weight:700;padding:8px 12px;margin-bottom:24px;}
+.admin-nav{list-style:none;display:flex;flex-direction:column;gap:4px;flex:1;}
+.admin-nav a{display:block;padding:10px 14px;border-radius:10px;font-size:0.875rem;color:rgba(253,246,236,0.4);transition:all 0.2s;}
+.admin-nav a:hover,.admin-nav a.active{background:rgba(200,135,58,0.1);color:var(--cream);}
+.admin-main{padding:36px;}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:var(--ink-soft);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;}
+.stat-icon{font-size:1.6rem;margin-bottom:8px;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--caramel);}
+.stat-lbl{font-size:0.72rem;color:rgba(253,246,236,0.3);text-transform:uppercase;letter-spacing:1px;}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{padding:12px 16px;text-align:left;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(253,246,236,0.3);border-bottom:1px solid var(--border);}
+.data-table td{padding:14px 16px;border-bottom:1px solid rgba(200,135,58,0.05);font-size:0.875rem;color:rgba(253,246,236,0.6);}
+.status-sel{background:var(--ink-mid);border:1px solid var(--border);color:var(--cream);padding:6px 10px;border-radius:8px;font-size:0.78rem;cursor:pointer;}
+
+/* ── ACCOUNT ── */
+.account-grid{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:start;}
+.points-card{background:linear-gradient(135deg,rgba(200,135,58,0.15),rgba(212,175,106,0.08));border:1px solid rgba(200,135,58,0.25);border-radius:18px;padding:24px;margin-bottom:16px;position:relative;overflow:hidden;}
+.points-val{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:700;color:var(--caramel);line-height:1;}
+.points-lbl{font-size:0.75rem;color:rgba(253,246,236,0.3);margin-top:6px;}
+.acct-nav{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.acct-nav a{display:block;padding:10px 14px;border-radius:10px;font-size:0.875rem;color:rgba(253,246,236,0.45);transition:all 0.2s;cursor:pointer;}
+.acct-nav a:hover,.acct-nav a.active{background:rgba(253,246,236,0.06);color:var(--cream);}
+
+/* ── AUTH MODAL ── */
+.auth-modal{border-radius:24px;max-width:400px !important;}
+.auth-tabs{display:flex;gap:0;background:rgba(253,246,236,0.05);border-radius:10px;padding:4px;margin-bottom:24px;}
+.auth-tab{flex:1;padding:9px;border:none;background:transparent;color:rgba(253,246,236,0.4);font-size:0.875rem;font-weight:600;border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.auth-tab.active{background:rgba(200,135,58,0.15);color:var(--caramel);}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 20px;border-radius:12px;font-size:0.875rem;font-weight:500;display:flex;align-items:center;gap:10px;animation:slideIn 0.3s ease;box-shadow:var(--shadow-xl);}
+.toast.success{background:#1a2e1a;border:1px solid rgba(52,211,153,0.3);color:#34D399;}
+.toast.error{background:#2e1a1a;border:1px solid rgba(248,113,113,0.3);color:#F87171;}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* ── PROMO BANNER ── */
+.promo-banner{background:linear-gradient(135deg,rgba(200,135,58,0.08),rgba(212,175,106,0.04));border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:64px 24px;text-align:center;position:relative;overflow:hidden;}
+.promo-code{display:inline-block;font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--caramel);background:rgba(200,135,58,0.1);border:2px dashed rgba(200,135,58,0.4);border-radius:14px;padding:12px 32px;letter-spacing:4px;}
+
+/* ── FOOTER ── */
+footer{background:var(--ink-soft);border-top:1px solid var(--border);padding:56px 0 28px;}
+.footer-grid{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:40px;}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--caramel);margin-bottom:12px;}
+.footer-brand p{font-size:0.875rem;color:rgba(253,246,236,0.3);line-height:1.8;}
+.footer-col h4{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(253,246,236,0.3);margin-bottom:16px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.footer-col a{font-size:0.875rem;color:rgba(253,246,236,0.35);transition:color 0.2s;cursor:pointer;}
+.footer-col a:hover{color:var(--caramel);}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:20px 24px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:0.78rem;color:rgba(253,246,236,0.2);}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:80px 24px;}
+.empty-state .icon{font-size:4rem;display:block;margin-bottom:20px;}
+.empty-state h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:var(--cream);margin-bottom:10px;}
+.empty-state p{color:rgba(253,246,236,0.35);}
+
+/* ── LOADER ── */
+.loader{display:flex;justify-content:center;padding:60px;grid-column:1/-1;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--caramel);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── GLOW DIVIDER ── */
+.glow-divider{border:none;height:1px;background:linear-gradient(90deg,transparent,var(--caramel),var(--gold),var(--caramel),transparent);}
+
+/* ── HAMBURGER ── */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--cream);transition:all 0.3s;border-radius:2px;}
+
+/* ── STORY ── */
+.story-img{border-radius:24px;overflow:hidden;height:460px;box-shadow:var(--shadow-xl);border:1px solid var(--border);}
+.story-img img{width:100%;height:100%;object-fit:cover;opacity:0.85;}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s,transform 0.6s;}
+.reveal.visible{opacity:1;transform:none;}
+
+@media(max-width:900px){
+  .cart-layout,.checkout-layout{grid-template-columns:1fr;}
+  .order-summary{position:static;}
+  .features-inner{grid-template-columns:1fr 1fr;}
+  .feature{border-right:none;border-bottom:1px solid var(--border);}
+  .feature:nth-child(odd){border-right:1px solid var(--border);}
+  .feature:last-child,.feature:nth-last-child(2){border-bottom:none;}
+  .account-grid{grid-template-columns:1fr;}
+  .admin-wrap{grid-template-columns:1fr;}
+  .admin-side{position:static;height:auto;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .story-section .container>div{grid-template-columns:1fr !important;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .form-row{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .nav-links{display:none;position:absolute;top:68px;left:0;right:0;background:var(--ink-soft);border-bottom:1px solid var(--border);flex-direction:column;padding:16px;gap:4px;}
+  .nav-links.open{display:flex;}
+  .hamburger{display:flex;}
+  .hero h1{font-size:2.8rem;}
+  .hero-img{display:none;}
+  .hero-cards{flex-wrap:wrap;}
+  .stat-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .features-inner{grid-template-columns:1fr;}
+  .feature{border-right:none;}
+}
+</style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <a href="/" class="nav-logo"><span class="nav-logo-dot"></span>Brewhaus</a>
-    <ul class="nav-links">
-      <li><a href="/" class="active">Home</a></li>
-      <li><a href="/menu">Menu</a></li>
-      <li><a href="/orders">My Orders</a></li>
-      <li><a href="#" id="authNavLink">Sign In</a></li>
-      <li><a href="/cart" class="nav-cart">🛒 Cart <span class="cart-badge">0</span></a></li>
-    </ul>
-    <button class="hamburger"><span></span><span></span><span></span></button>
-  </div>
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo" onclick="showPage('home')">☕ Brewhaus</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a href="#" onclick="showPage('menu')" id="nav-menu">Menu</a></li>
+    <li><a href="#" onclick="showPage('orders')" id="nav-orders">My Orders</a></li>
+    <li><a href="#" id="authNavLink" onclick="handleAuthClick(event)">Sign In</a></li>
+    <li><a href="#" onclick="showPage('cart')" class="nav-cart">🛒 Cart <span class="cart-badge" id="cartBadge">0</span></a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-orb hero-orb-1"></div>
-  <div class="hero-orb hero-orb-2"></div>
-  <div class="hero-orb hero-orb-3"></div>
-  <div class="hero-right">
-    <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=900&q=80" alt="Coffee shop">
-  </div>
-  <div class="container" style="position:relative;z-index:2;">
-    <div class="hero-content">
-      <div class="hero-pill"><span class="hero-pill-dot"></span>Now Open · Cotabato City</div>
-      <h1>Craft Coffee<br><em>Worth Waking For</em></h1>
-      <p class="hero-sub">Ethically sourced, expertly roasted, brewed fresh per order. Pick up in 15 minutes or get it delivered to your door.</p>
-      <div class="hero-actions">
-        <a href="/menu" class="btn btn-primary" style="font-size:1rem;padding:15px 32px;">Order Now →</a>
-        <a href="#popular" class="btn btn-outline" style="font-size:1rem;padding:15px 28px;">Explore Menu</a>
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ITEM MODAL -->
+<div class="modal-overlay" id="itemModal" onclick="handleModalClick(event)">
+  <div class="modal" id="modalInner"></div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal" onclick="handleAuthModalClick(event)">
+  <div class="modal auth-modal" id="authModalInner"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE: HOME -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <img class="hero-img" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=900&q=80" alt="">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-pill"><span class="hero-pill-dot"></span>Now Open · Cotabato City</div>
+        <h1>Craft Coffee<br><em>Worth Waking For</em></h1>
+        <p class="hero-sub">Ethically sourced, expertly roasted, brewed fresh per order. Pick up in 15 minutes or get it delivered to your door.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="showPage('menu')" style="font-size:1rem;padding:15px 32px;">Order Now →</button>
+          <button class="btn btn-outline" onclick="document.getElementById('popular-section').scrollIntoView({behavior:'smooth'})" style="font-size:1rem;padding:15px 28px;">Explore Menu</button>
+        </div>
+        <div class="hero-cards">
+          <div class="hero-card"><div class="hero-card-num">4.9★</div><div class="hero-card-lbl">Rating</div></div>
+          <div class="hero-card"><div class="hero-card-num">15min</div><div class="hero-card-lbl">Pickup</div></div>
+          <div class="hero-card"><div class="hero-card-num">20+</div><div class="hero-card-lbl">Items</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="features">
+    <div class="container">
+      <div class="features-inner">
+        <div class="feature"><div class="feature-icon">🌱</div><div><div class="feature-title">Ethically Sourced</div><div class="feature-desc">Direct trade with local farms</div></div></div>
+        <div class="feature"><div class="feature-icon">⚡</div><div><div class="feature-title">Ready in 15 min</div><div class="feature-desc">Order ahead, skip the queue</div></div></div>
+        <div class="feature"><div class="feature-icon">🏍️</div><div><div class="feature-title">City-Wide Delivery</div><div class="feature-desc">₱60 flat rate, fast & fresh</div></div></div>
+        <div class="feature"><div class="feature-icon">⭐</div><div><div class="feature-title">Loyalty Rewards</div><div class="feature-desc">Earn points on every order</div></div></div>
       </div>
     </div>
   </div>
-  <div class="hero-float-cards">
-    <div class="hero-float-card"><div class="hero-float-num">4.9★</div><div class="hero-float-label">Customer Rating</div></div>
-    <div class="hero-float-card"><div class="hero-float-num">15min</div><div class="hero-float-label">Avg Pickup Time</div></div>
-    <div class="hero-float-card"><div class="hero-float-num">20+</div><div class="hero-float-label">Menu Items</div></div>
-  </div>
-  <!-- Animated bottom border -->
-  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,135,58,0.6),rgba(212,175,106,0.8),rgba(200,135,58,0.6),transparent);background-size:200% 100%;animation:borderFlow 3s ease infinite;"></div>
-</section>
 
-<!-- FEATURES -->
-<div class="features-strip">
-  <div class="features-inner">
-    <div class="feature-item reveal">
-      <div class="feature-icon">🌱</div>
-      <div><div class="feature-title">Ethically Sourced</div><div class="feature-desc">Direct trade with local farms</div></div>
+  <section class="section" id="popular-section" style="background:var(--ink);">
+    <div class="container">
+      <div class="section-label reveal">Most Loved</div>
+      <h2 class="section-title reveal">Popular Picks</h2>
+      <p class="section-sub reveal">Our bestsellers, chosen by your neighbors.</p>
+      <div class="menu-grid" id="popularGrid"><div class="loader"><div class="spinner"></div></div></div>
+      <div style="text-align:center;margin-top:48px;">
+        <button class="btn btn-outline" onclick="showPage('menu')" style="font-size:1rem;padding:15px 36px;">View Full Menu →</button>
+      </div>
     </div>
-    <div class="feature-item reveal reveal-delay-1">
-      <div class="feature-icon">⚡</div>
-      <div><div class="feature-title">Ready in 15 min</div><div class="feature-desc">Order ahead, skip the queue</div></div>
+  </section>
+
+  <hr class="glow-divider">
+
+  <section class="section story-section" style="background:var(--ink-soft);">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+        <div class="story-img reveal">
+          <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&q=80" alt="Barista">
+        </div>
+        <div class="reveal">
+          <div class="section-label">Our Story</div>
+          <h2 class="section-title">More Than Just<br>a Cup of Coffee</h2>
+          <p style="color:rgba(253,246,236,0.45);margin-bottom:24px;line-height:1.8;font-weight:300;">We believe great coffee starts with great relationships — with the farmers who grow it, the roasters who perfect it, and the people who drink it.</p>
+          <p style="color:rgba(253,246,236,0.45);margin-bottom:36px;line-height:1.8;font-weight:300;">Each bean is carefully selected and roasted in small batches right here in Cotabato, ensuring the freshest, most flavorful cup possible.</p>
+          <button class="btn btn-primary" onclick="showPage('menu')" style="font-size:0.95rem;padding:13px 28px;">Start Ordering</button>
+        </div>
+      </div>
     </div>
-    <div class="feature-item reveal reveal-delay-2">
-      <div class="feature-icon">🏍️</div>
-      <div><div class="feature-title">City-Wide Delivery</div><div class="feature-desc">₱60 flat rate, fast & fresh</div></div>
+  </section>
+
+  <div class="promo-banner">
+    <div style="position:relative;z-index:1;">
+      <div class="section-label" style="justify-content:center;margin-bottom:16px;">Limited Offer</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3rem);color:var(--cream);margin-bottom:12px;">First order? Try us on us.</h2>
+      <p style="color:rgba(253,246,236,0.4);margin-bottom:24px;font-weight:300;">Use code below to get ₱50 off your first online order.</p>
+      <div class="promo-code">WELCOME</div>
+      <div style="margin-top:24px;"><button class="btn btn-primary" onclick="showPage('menu')" style="font-size:1rem;padding:14px 32px;">Claim Offer →</button></div>
     </div>
-    <div class="feature-item reveal reveal-delay-3">
-      <div class="feature-icon">⭐</div>
-      <div><div class="feature-title">Loyalty Rewards</div><div class="feature-desc">Earn points on every order</div></div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Brewhaus</div>
+        <p>A specialty coffee shop in the heart of Cotabato City. We believe great coffee starts with great relationships.</p>
+      </div>
+      <div class="footer-col"><h4>Order</h4><ul><li><a onclick="showPage('menu')">Full Menu</a></li><li><a onclick="showPage('cart')">My Cart</a></li><li><a onclick="showPage('orders')">Track Order</a></li></ul></div>
+      <div class="footer-col"><h4>Info</h4><ul><li><a>About Us</a></li><li><a>Careers</a></li><li><a onclick="showPage('admin')">Admin</a></li></ul></div>
     </div>
+    <div class="footer-bottom"><span>© 2024 Brewhaus Coffee. All rights reserved.</span><span>Made with ☕ in Cotabato City 🇵🇭</span></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE: MENU -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page" id="page-menu">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label" style="margin-bottom:12px;">Handcrafted Daily</div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.5rem);color:var(--cream);font-weight:600;margin-bottom:8px;">Our Full Menu</h1>
+      <p style="color:rgba(253,246,236,0.35);font-weight:300;">Fresh, made to order, exactly how you like it.</p>
+    </div>
+  </div>
+  <div class="container" style="padding-top:40px;padding-bottom:80px;">
+    <div style="margin-bottom:28px;max-width:460px;position:relative;">
+      <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:rgba(253,246,236,0.3);pointer-events:none;">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search drinks, food..." style="padding-left:46px;" oninput="renderMenu()">
+    </div>
+    <div class="cats-bar" id="catsBar"></div>
+    <div class="menu-grid" id="menuGrid"><div class="loader"><div class="spinner"></div></div></div>
   </div>
 </div>
 
-<!-- POPULAR -->
-<section class="section" id="popular" style="background:var(--ink);">
-  <div class="container">
-    <div class="section-label reveal">Most Loved</div>
-    <h2 class="section-title reveal">Popular Picks</h2>
-    <p class="section-sub reveal">Our bestsellers, chosen by your neighbors.</p>
-    <div class="menu-grid" id="popularGrid">
-      <div class="loader"><div class="spinner"></div></div>
-    </div>
-    <div style="text-align:center;margin-top:48px;" class="reveal">
-      <a href="/menu" class="btn btn-outline" style="font-size:1rem;padding:15px 36px;">View Full Menu →</a>
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE: CART -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page" id="page-cart">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label" style="margin-bottom:10px;">Review</div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--cream);font-weight:600;">Your Cart</h1>
     </div>
   </div>
-</section>
-
-<hr class="glow-divider">
-
-<!-- STORY SECTION -->
-<section class="story-section">
-  <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
-      <div style="border-radius:24px;overflow:hidden;height:460px;box-shadow:var(--shadow-xl);position:relative;border:1px solid var(--border);" class="reveal">
-        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&q=80" alt="Barista" style="width:100%;height:100%;object-fit:cover;opacity:0.85;">
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(8,6,4,0.5),transparent);"></div>
-      </div>
-      <div class="reveal reveal-delay-2">
-        <div class="section-label">Our Story</div>
-        <h2 class="section-title">More Than Just<br>a Cup of Coffee</h2>
-        <p style="color:rgba(253,246,236,0.45);margin-bottom:24px;line-height:1.8;font-weight:300;">
-          We believe great coffee starts with great relationships — with the farmers who grow it, the roasters who perfect it, and the people who drink it. Every cup tells a story.
-        </p>
-        <p style="color:rgba(253,246,236,0.45);margin-bottom:36px;line-height:1.8;font-weight:300;">
-          Each bean is carefully selected and roasted in small batches right here in Cotabato, ensuring the freshest, most flavorful cup possible.
-        </p>
-        <a href="/menu" class="btn btn-primary" style="font-size:0.95rem;padding:13px 28px;">Start Ordering</a>
-      </div>
+  <div class="container" style="padding-top:40px;padding-bottom:80px;">
+    <div id="emptyCart" style="display:none;">
+      <div class="empty-state"><span class="icon">☕</span><h3>Your cart is empty</h3><p style="margin-bottom:28px;">Add some drinks or food to get started</p><button class="btn btn-primary" onclick="showPage('menu')" style="font-size:1rem;padding:13px 28px;">Browse Menu</button></div>
     </div>
-  </div>
-</section>
-
-<!-- PROMO -->
-<div class="promo-banner">
-  <div style="position:relative;z-index:1;">
-    <div class="section-label" style="justify-content:center;margin-bottom:16px;">Limited Offer</div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3rem);color:var(--cream);margin-bottom:12px;">First order? Try us on us.</h2>
-    <p style="color:rgba(253,246,236,0.4);margin-bottom:24px;font-weight:300;">Use code below to get ₱50 off your first online order. No minimum spend.</p>
-    <div class="promo-code">WELCOME</div>
-    <div style="margin-top:24px;">
-      <a href="/menu" class="btn btn-primary" style="font-size:1rem;padding:14px 32px;">Claim Offer →</a>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <div class="footer-logo">Brewhaus</div>
-      <p>A specialty coffee shop in the heart of Cotabato City. We believe great coffee starts with great relationships — with farmers, our team, and you.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Order</h4>
-      <ul>
-        <li><a href="/menu">Full Menu</a></li>
-        <li><a href="/cart">My Cart</a></li>
-        <li><a href="/orders">Track Order</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Info</h4>
-      <ul>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Careers</a></li>
-        <li><a href="#">Contact</a></li>
-        <li><a href="/admin">Admin</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2024 Brewhaus Coffee. All rights reserved.</span>
-    <span>Made with ☕ in Cotabato City 🇵🇭</span>
-  </div>
-</footer>
-
-<script src="/js/app.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const grid = document.getElementById('popularGrid');
-  try {
-    const res = await fetch('/api/menu/popular');
-    const items = await res.json();
-    grid.innerHTML = items.map((item, idx) => {
-      const photo = getItemPhoto(item.name);
-      return `
-        <div class="menu-card reveal" style="animation-delay:${idx * 0.08}s" onclick="window.location='/menu'">
-          <div class="menu-card-img">
-            ${photo
-              ? `<img src="${photo}" alt="${item.name}" loading="lazy">`
-              : `<div class="menu-card-img-placeholder">${EMOJIS[item.category]||'☕'}</div>`
-            }
-            <div class="card-hover-overlay"></div>
-            <button class="card-quick-btn" onclick="event.stopPropagation();window.location='/menu'">Order Now</button>
-            ${item.popular ? '<span class="badge badge-popular card-badge">Popular</span>' : ''}
+    <div id="cartFull" class="cart-layout">
+      <div>
+        <div class="card" style="padding:0;">
+          <div style="padding:18px 24px;border-bottom:1px solid rgba(200,135,58,0.08);display:flex;justify-content:space-between;align-items:center;">
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--cream);">Items (<span id="itemCount">0</span>)</h2>
+            <button class="btn btn-sm" style="color:var(--danger);border:1px solid rgba(184,58,42,0.25);background:transparent;" onclick="clearCart()">Clear All</button>
           </div>
-          <div class="menu-card-body">
-            <div class="card-cat">${item.category}</div>
-            <div class="card-name">${item.name}</div>
-            <div class="card-desc">${item.description}</div>
-            <div class="card-footer">
-              <div class="card-price">${formatPrice(item.price)} <small>${item.sizes && item.sizes.length > 1 ? 'from' : ''}</small></div>
-              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();window.location='/menu'">+ Add</button>
+          <div id="cartItemsList"></div>
+        </div>
+        <button onclick="showPage('menu')" style="margin-top:16px;color:var(--caramel);background:none;border:none;font-size:0.875rem;font-weight:500;cursor:pointer;">← Continue Shopping</button>
+      </div>
+      <div class="order-summary">
+        <div class="card" style="padding:28px;">
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:20px;color:var(--cream);">Order Summary</h2>
+          <div class="promo-wrap">
+            <input type="text" id="promoInput" placeholder="Promo code" style="text-transform:uppercase;letter-spacing:1px;">
+            <button class="btn btn-outline btn-sm" onclick="applyPromo()">Apply</button>
+          </div>
+          <div id="promoMsg" style="font-size:0.82rem;margin-bottom:12px;display:none;"></div>
+          <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">₱0</span></div>
+          <div class="summary-row" id="cartDiscRow" style="display:none;color:#34D399;"><span>Discount</span><span id="cartDisc"></span></div>
+          <div class="summary-row"><span style="font-size:0.82rem;color:rgba(253,246,236,0.35);">Delivery (if applicable)</span><span style="font-size:0.82rem;color:rgba(253,246,236,0.35);">+₱60</span></div>
+          <div class="summary-row summary-total"><span>Subtotal</span><span id="cartTotal">₱0</span></div>
+          <button class="btn btn-primary btn-block" onclick="showPage('checkout')" style="margin-top:20px;font-size:0.95rem;padding:15px;">Proceed to Checkout →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE: CHECKOUT -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page" id="page-checkout">
+  <div class="page-header">
+    <div class="container">
+      <button onclick="showPage('cart')" style="color:rgba(253,246,236,0.35);background:none;border:none;font-size:0.85rem;cursor:pointer;margin-bottom:12px;">← Back to Cart</button>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--cream);font-weight:600;">Checkout</h1>
+    </div>
+  </div>
+  <div class="container" style="padding-top:40px;padding-bottom:80px;">
+    <div id="checkoutEmpty" style="display:none;"><div class="empty-state"><span class="icon">🛒</span><h3>Nothing to checkout</h3><button class="btn btn-primary" onclick="showPage('menu')" style="margin-top:16px;">Browse Menu</button></div></div>
+    <div class="checkout-layout" id="checkoutWrap">
+      <div>
+        <div class="card" style="padding:28px;margin-bottom:24px;">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;color:var(--cream);">How do you want it?</h3>
+          <div class="type-grid">
+            <div class="type-card active" id="pickupCard" onclick="setOrderType('pickup')"><div class="ticon">🏠</div><div class="tlabel">Pick Up</div><div class="tsub">Ready in ~15 min</div></div>
+            <div class="type-card" id="deliveryCard" onclick="setOrderType('delivery')"><div class="ticon">🏍️</div><div class="tlabel">Delivery</div><div class="tsub">+₱60 delivery fee</div></div>
+          </div>
+          <div id="pickupSec">
+            <div class="form-group"><label>Preferred Pickup Time</label>
+              <select id="pickupTime"><option value="asap">As soon as possible (~15 min)</option><option value="30min">In 30 minutes</option><option value="1hr">In 1 hour</option></select>
             </div>
           </div>
-        </div>`;
-    }).join('');
-    // Re-run reveal for newly added cards
-    setTimeout(() => {
-      document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight) el.classList.add('visible');
-      });
-    }, 100);
-  } catch { grid.innerHTML = '<p style="color:rgba(253,246,236,0.3)">Could not load menu.</p>'; }
+          <div id="deliverySec" style="display:none;">
+            <div class="form-group"><label>Delivery Address</label><textarea id="delAddr" rows="2" placeholder="Street, Barangay, Cotabato City"></textarea></div>
+            <div class="form-group"><label>Notes (optional)</label><input type="text" id="delNotes" placeholder="Landmark, gate code, etc."></div>
+          </div>
+        </div>
+        <div class="card" style="padding:28px;margin-bottom:24px;">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;color:var(--cream);">Contact Details</h3>
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input type="text" id="fname" placeholder="Juan"></div>
+            <div class="form-group"><label>Last Name</label><input type="text" id="lname" placeholder="dela Cruz"></div>
+          </div>
+          <div class="form-group"><label>Phone</label><input type="tel" id="phone" placeholder="09XX XXX XXXX"></div>
+          <div class="form-group"><label>Email (receipt)</label><input type="email" id="email" placeholder="you@email.com"></div>
+        </div>
+        <div class="card" style="padding:28px;">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;color:var(--cream);">Payment Method</h3>
+          <div class="pay-grid">
+            <div class="pay-card active" data-m="cash" onclick="setPayMethod(this)">💵 Cash</div>
+            <div class="pay-card" data-m="gcash" onclick="setPayMethod(this)">📱 GCash</div>
+            <div class="pay-card" data-m="maya" onclick="setPayMethod(this)">💳 Maya</div>
+            <div class="pay-card" data-m="card" onclick="setPayMethod(this)">🏦 Card</div>
+          </div>
+          <div id="gcashBox" style="display:none;" class="info-box"><strong style="color:var(--cream);">GCash:</strong> 0917 123 4567<br><span style="color:rgba(253,246,236,0.4);font-size:0.82rem;">Send payment before completing order.</span></div>
+          <div id="mayaBox" style="display:none;" class="info-box"><strong style="color:var(--cream);">Maya:</strong> 0917 987 6543<br><span style="color:rgba(253,246,236,0.4);font-size:0.82rem;">Include order number as reference.</span></div>
+        </div>
+      </div>
+      <div style="position:sticky;top:84px;">
+        <div class="card" style="padding:28px;">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:20px;color:var(--cream);">Order Summary</h3>
+          <div id="checkoutItems"></div>
+          <div style="border-top:1px solid rgba(200,135,58,0.1);margin:16px 0;padding-top:16px;">
+            <div class="summary-row"><span>Subtotal</span><span id="coSub">₱0</span></div>
+            <div class="summary-row" id="coDiscRow" style="display:none;color:#34D399;"><span>Discount (<span id="coPromoLbl"></span>)</span><span id="coDisc"></span></div>
+            <div class="summary-row" id="coDelRow" style="display:none;"><span>Delivery</span><span>₱60</span></div>
+            <div class="summary-row summary-total"><span>Total</span><span id="coTotal" style="color:var(--caramel);">₱0</span></div>
+          </div>
+          <button class="btn btn-primary btn-block" style="font-size:1rem;padding:16px;" id="placeBtn" onclick="placeOrder()">Place Order ✓</button>
+          <p style="font-size:0.75rem;color:rgba(253,246,236,0.25);text-align:center;margin-top:12px;">By ordering you agree to our terms of service.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE: ORDERS -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page" id="page-orders">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label" style="margin-bottom:10px;">Real-Time</div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--cream);font-weight:600;">Order Tracking</h1>
+    </div>
+  </div>
+  <div class="container" style="padding-top:40px;padding-bottom:80px;">
+    <div class="card" style="padding:28px;max-width:520px;margin-bottom:40px;">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:14px;color:var(--cream);">Track an Order</h3>
+      <div style="display:flex;gap:10px;">
+        <input type="text" id="trackInput" placeholder="Order short ID (e.g. AB12CD)" style="flex:1;text-transform:uppercase;">
+        <button class="btn btn-primary" style="white-space:nowrap;" onclick="trackOrder()">Track</button>
+      </div>
+    </div>
+    <div id="trackedOrder" style="display:none;margin-bottom:44px;"></div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;margin-bottom:24px;color:var(--cream);">Order History</h2>
+    <div id="historyOrders"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE: ACCOUNT -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page" id="page-account">
+  <div class="page-header">
+    <div class="container">
+      <div class="section-label" style="margin-bottom:10px;">Profile</div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--cream);font-weight:600;">My Account</h1>
+    </div>
+  </div>
+  <div class="container" style="padding-top:40px;padding-bottom:80px;">
+    <div id="guestView" style="display:none;">
+      <div class="empty-state"><span class="icon">☕</span><h3>Sign in to continue</h3><p style="margin-bottom:28px;">Access your orders, points, and saved preferences.</p><button class="btn btn-primary" onclick="showAuthModal()" style="font-size:1rem;padding:13px 28px;">Sign In / Register</button></div>
+    </div>
+    <div id="userView" style="display:none;" class="account-grid">
+      <div>
+        <div class="points-card">
+          <div style="font-size:0.68rem;color:rgba(253,246,236,0.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Loyalty Points</div>
+          <div class="points-val" id="acctPoints">0</div>
+          <div class="points-lbl">₱1 = 1 point · Redeem soon</div>
+        </div>
+        <ul class="acct-nav">
+          <li><a class="active" onclick="showAcctTab('profile',this)">👤 Profile</a></li>
+          <li><a onclick="showAcctTab('orders',this)">📋 Orders</a></li>
+          <li><a onclick="doLogout()">🚪 Sign Out</a></li>
+        </ul>
+      </div>
+      <div>
+        <div id="acct-profile">
+          <div class="card" style="padding:32px;">
+            <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:24px;color:var(--cream);">Profile Information</h3>
+            <div class="form-group"><label>Full Name</label><input type="text" id="pName"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="pEmail" disabled style="opacity:0.4;"></div>
+            <button class="btn btn-primary" onclick="saveProfile()" style="padding:12px 28px;">Save Changes</button>
+          </div>
+        </div>
+        <div id="acct-orders" style="display:none;">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:20px;color:var(--cream);">Order History</h3>
+          <div id="acctOrdersList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE: ADMIN -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page" id="page-admin">
+  <div id="adminLoginGate" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink);">
+    <div style="background:var(--ink-soft);border:1px solid rgba(200,135,58,0.18);border-radius:24px;padding:40px 36px;width:100%;max-width:380px;margin:24px;">
+      <div style="text-align:center;margin-bottom:28px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--caramel);font-weight:700;">Brewhaus</div>
+        <div style="font-size:0.72rem;color:rgba(253,246,236,0.3);letter-spacing:2px;text-transform:uppercase;margin-top:4px;">Admin Dashboard</div>
+      </div>
+      <div class="form-group"><label>Admin Password</label><input type="password" id="adminPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')adminLogin()"></div>
+      <button class="btn btn-primary btn-block" style="font-size:1rem;padding:14px;" onclick="adminLogin()">Access Dashboard</button>
+      <div id="adminLoginErr" style="color:#F87171;font-size:0.82rem;margin-top:12px;text-align:center;display:none;"></div>
+      <div style="margin-top:20px;padding:14px;background:rgba(200,135,58,0.06);border-radius:10px;font-size:0.78rem;color:rgba(253,246,236,0.35);border:1px solid rgba(200,135,58,0.12);">
+        Default: <code style="background:rgba(200,135,58,0.1);color:var(--caramel);padding:2px 8px;border-radius:4px;">brewhaus-admin-2024</code>
+      </div>
+    </div>
+  </div>
+  <div id="adminDash" style="display:none;" class="admin-wrap">
+    <div class="admin-side">
+      <div class="admin-logo">☕ Brewhaus</div>
+      <ul class="admin-nav">
+        <li><a class="active" onclick="showAdminSec('dash',this)">📊 Dashboard</a></li>
+        <li><a onclick="showAdminSec('orders',this)">📋 All Orders</a></li>
+        <li><a onclick="showAdminSec('menu',this)">🍽️ Menu</a></li>
+        <li style="margin-top:auto;padding-top:24px;border-top:1px solid rgba(200,135,58,0.1);"><a onclick="showPage('home')" style="color:rgba(253,246,236,0.3);">← Back to Site</a></li>
+      </ul>
+    </div>
+    <div class="admin-main">
+      <div id="asec-dash">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;margin-bottom:28px;color:var(--cream);">Dashboard</h2>
+        <div class="stat-grid" id="adminStats"></div>
+        <div class="card" style="padding:28px;"><h3 style="font-weight:700;margin-bottom:18px;color:var(--cream);">Recent Orders</h3><div id="adminRecent"></div></div>
+      </div>
+      <div id="asec-orders" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:var(--cream);">All Orders</h2>
+          <button class="btn btn-outline btn-sm" onclick="loadAdminOrders()">🔄 Refresh</button>
+        </div>
+        <div class="card" style="padding:0;overflow:auto;">
+          <table class="data-table"><thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Type</th><th>Date</th><th>Status</th></tr></thead><tbody id="adminOrdersBody"></tbody></table>
+        </div>
+      </div>
+      <div id="asec-menu" style="display:none;">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;margin-bottom:28px;color:var(--cream);">Menu Management</h2>
+        <div id="adminMenuGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════
+const MENU = {
+  categories:[
+    {id:'hot',name:'Hot Drinks',icon:'☕'},
+    {id:'cold',name:'Cold Drinks',icon:'🧊'},
+    {id:'blended',name:'Blended',icon:'🥤'},
+    {id:'food',name:'Food',icon:'🥐'},
+    {id:'merch',name:'Merch',icon:'🛍️'}
+  ],
+  items:[
+    {id:1,category:'hot',name:'Signature Espresso',description:'Rich double shot with velvety crema, our house blend roasted in-store.',price:120,customizable:true,sizes:[{label:'Solo',price:0},{label:'Doppio',price:30}],milks:['Whole Milk','Oat Milk','Almond Milk','Soy Milk','Coconut Milk'],extras:[{label:'Extra Shot',price:40},{label:'Vanilla Syrup',price:20},{label:'Caramel Drizzle',price:20},{label:'Hazelnut Syrup',price:20}],popular:true,available:true},
+    {id:2,category:'hot',name:'Flat White',description:'Microfoam milk poured over a ristretto shot for a silky, intense experience.',price:160,customizable:true,sizes:[{label:'Regular',price:0},{label:'Large',price:30}],milks:['Whole Milk','Oat Milk','Almond Milk','Soy Milk','Coconut Milk'],extras:[{label:'Extra Shot',price:40},{label:'Vanilla Syrup',price:20},{label:'Caramel Drizzle',price:20}],popular:true,available:true},
+    {id:3,category:'hot',name:'Pour Over',description:'Single origin beans, hand-poured to order. Clean, bright, and complex.',price:200,customizable:false,sizes:[{label:'Regular',price:0}],milks:[],extras:[],popular:false,available:true},
+    {id:4,category:'hot',name:'Café Latte',description:'Espresso with steamed milk and a light layer of foam. A classic comfort drink.',price:150,customizable:true,sizes:[{label:'Small',price:0},{label:'Medium',price:25},{label:'Large',price:45}],milks:['Whole Milk','Oat Milk','Almond Milk','Soy Milk','Coconut Milk'],extras:[{label:'Extra Shot',price:40},{label:'Vanilla Syrup',price:20},{label:'Brown Sugar Syrup',price:20}],popular:true,available:true},
+    {id:5,category:'cold',name:'Cold Brew',description:'Steeped 18 hours in cold water. Smooth, less acidic, naturally sweet.',price:180,customizable:true,sizes:[{label:'Regular',price:0},{label:'Large',price:40}],milks:['None','Whole Milk','Oat Milk'],extras:[{label:'Vanilla Sweet Cream',price:35},{label:'Brown Sugar Syrup',price:20}],popular:true,available:true},
+    {id:6,category:'cold',name:'Iced Americano',description:'Double espresso over ice, topped with cold water. Bold and refreshing.',price:140,customizable:true,sizes:[{label:'Regular',price:0},{label:'Large',price:30}],milks:[],extras:[{label:'Extra Shot',price:40},{label:'Vanilla Syrup',price:20}],popular:false,available:true},
+    {id:7,category:'cold',name:'Iced Matcha Latte',description:'Ceremonial grade matcha whisked with your choice of milk over ice.',price:190,customizable:true,sizes:[{label:'Regular',price:0},{label:'Large',price:35}],milks:['Oat Milk','Whole Milk','Almond Milk','Coconut Milk'],extras:[{label:'Vanilla Syrup',price:20},{label:'Brown Sugar Syrup',price:20}],popular:true,available:true},
+    {id:8,category:'blended',name:'Mocha Frappé',description:'Coffee, chocolate, milk, and ice blended to perfection. Topped with whip.',price:210,customizable:true,sizes:[{label:'Medium',price:0},{label:'Large',price:40}],milks:['Whole Milk','Oat Milk','Almond Milk'],extras:[{label:'Whipped Cream',price:25},{label:'Extra Chocolate',price:20},{label:'Extra Shot',price:40}],popular:true,available:true},
+    {id:9,category:'blended',name:'Caramel Crunch',description:'Blended caramel latte with toffee bits, drizzled with salted caramel sauce.',price:230,customizable:true,sizes:[{label:'Medium',price:0},{label:'Large',price:40}],milks:['Whole Milk','Oat Milk'],extras:[{label:'Whipped Cream',price:25},{label:'Extra Caramel',price:20}],popular:false,available:true},
+    {id:10,category:'food',name:'Butter Croissant',description:'Flaky, buttery layers baked fresh every morning. Best paired with espresso.',price:95,customizable:false,sizes:[],milks:[],extras:[],popular:true,available:true},
+    {id:11,category:'food',name:'Avocado Toast',description:'Smashed avo on sourdough with chili flakes, lemon, and microgreens.',price:195,customizable:false,sizes:[],milks:[],extras:[],popular:false,available:true},
+    {id:12,category:'food',name:'Banana Walnut Loaf',description:'House-baked banana bread studded with toasted walnuts. Served warm.',price:120,customizable:false,sizes:[],milks:[],extras:[],popular:true,available:true},
+    {id:13,category:'merch',name:'Brewhaus Tumbler',description:'Double-wall vacuum insulated 16oz stainless steel tumbler. Keeps cold 24hrs.',price:850,customizable:false,sizes:[],milks:[],extras:[],popular:false,available:true},
+    {id:14,category:'merch',name:'Canvas Tote Bag',description:'100% organic cotton tote with our hand-drawn bean illustration print.',price:350,customizable:false,sizes:[],milks:[],extras:[],popular:false,available:true}
+  ]
+};
+
+const PHOTOS = {
+  'espresso':'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&q=80',
+  'flat white':'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&q=80',
+  'pour over':'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80',
+  'latte':'https://images.unsplash.com/photo-1561047029-3000c68339ca?w=600&q=80',
+  'cold brew':'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80',
+  'americano':'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80',
+  'matcha':'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=600&q=80',
+  'mocha':'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80',
+  'caramel':'https://images.unsplash.com/photo-1579888944880-d98341245702?w=600&q=80',
+  'croissant':'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80',
+  'avocado':'https://images.unsplash.com/photo-1541519227354-08fa5d50c820?w=600&q=80',
+  'banana':'https://images.unsplash.com/photo-1528975604071-b4dc52a2d18c?w=600&q=80',
+  'tumbler':'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=80',
+  'tote':'https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&q=80'
+};
+const EMOJIS={hot:'☕',cold:'🧊',blended:'🥤',food:'🥐',merch:'🛍️'};
+const ADMIN_PASS='brewhaus-admin-2024';
+
+function getPhoto(name){
+  const l=name.toLowerCase();
+  for(const[k,v] of Object.entries(PHOTOS)){if(l.includes(k))return v;}
+  return null;
+}
+function fmtPrice(n){return'₱'+Number(n).toLocaleString('en-PH',{minimumFractionDigits:0});}
+function fmtDate(s){return new Date(s).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function shortId(){return Math.random().toString(36).substr(2,6).toUpperCase();}
+
+// ══════════════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════════════
+function getCart(){return JSON.parse(localStorage.getItem('bh_cart')||'[]');}
+function saveCart(c){localStorage.setItem('bh_cart',JSON.stringify(c));updateCartBadge();}
+function getOrders(){return JSON.parse(localStorage.getItem('bh_orders')||'[]');}
+function saveOrders(o){localStorage.setItem('bh_orders',JSON.stringify(o));}
+function getUsers(){return JSON.parse(localStorage.getItem('bh_users')||'[]');}
+function saveUsers(u){localStorage.setItem('bh_users',JSON.stringify(u));}
+function getCurrentUser(){return JSON.parse(localStorage.getItem('bh_user')||'null');}
+function setCurrentUser(u){u?localStorage.setItem('bh_user',JSON.stringify(u)):localStorage.removeItem('bh_user');}
+function getPromo(){return localStorage.getItem('bh_promo')||null;}
+function setPromo(p){p?localStorage.setItem('bh_promo',p):localStorage.removeItem('bh_promo');}
+function getMenuOverrides(){return JSON.parse(localStorage.getItem('bh_menu_overrides')||'{}');}
+function saveMenuOverrides(o){localStorage.setItem('bh_menu_overrides',JSON.stringify(o));}
+
+function getMenuItems(){
+  const overrides=getMenuOverrides();
+  return MENU.items.map(item=>({...item,...(overrides[item.id]||{})}));
+}
+
+// ══════════════════════════════════════════════════
+// CART
+// ══════════════════════════════════════════════════
+function cartCount(){return getCart().reduce((s,i)=>s+i.qty,0);}
+function cartSubtotal(){return getCart().reduce((s,i)=>s+i.totalPrice*i.qty,0);}
+function updateCartBadge(){
+  const c=cartCount();
+  document.getElementById('cartBadge').textContent=c;
+}
+function cartAdd(item){
+  const cart=getCart();
+  const ex=cart.find(i=>i.menuId===item.menuId&&i.size===item.size&&i.milk===item.milk&&JSON.stringify(i.extras)===JSON.stringify(item.extras));
+  if(ex){ex.qty+=item.qty;}else{cart.push({...item,cartId:Date.now()+Math.random()});}
+  saveCart(cart);
+  toast(`${item.name} added to cart ☕`);
+}
+function cartRemove(cartId){const c=getCart().filter(i=>i.cartId!==cartId);saveCart(c);}
+function cartUpdateQty(cartId,qty){
+  const c=getCart();
+  const i=c.find(x=>x.cartId===cartId);
+  if(!i)return;
+  if(qty<=0){cartRemove(cartId);return;}
+  i.qty=qty;saveCart(c);
+}
+function cartClear(){saveCart([]);}
+
+// ══════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════
+function toast(msg,type='success'){
+  const wrap=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<span>${type==='success'?'✓':'✕'}</span> ${msg}`;
+  wrap.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.4s';setTimeout(()=>t.remove(),400);},3000);
+}
+
+// ══════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  document.querySelectorAll('.nav-links a[id^="nav-"]').forEach(a=>a.classList.remove('active'));
+  const nl=document.getElementById(`nav-${name}`);
+  if(nl)nl.classList.add('active');
+  window.scrollTo(0,0);
+  document.getElementById('navLinks').classList.remove('open');
+  // Init page
+  if(name==='menu'){initMenu();}
+  if(name==='cart'){renderCart();}
+  if(name==='checkout'){initCheckout();}
+  if(name==='orders'){renderOrders();}
+  if(name==='account'){initAccount();}
+  if(name==='home'){renderPopular();}
+}
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open');}
+function handleAuthClick(e){
+  e.preventDefault();
+  const u=getCurrentUser();
+  if(u){showPage('account');}else{showAuthModal();}
+}
+
+// ══════════════════════════════════════════════════
+// REVEAL
+// ══════════════════════════════════════════════════
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+}
+
+// ══════════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════════
+function renderPopular(){
+  const grid=document.getElementById('popularGrid');
+  const items=getMenuItems().filter(i=>i.popular);
+  if(!items.length){grid.innerHTML='<p style="color:rgba(253,246,236,0.3);">No popular items.</p>';return;}
+  grid.innerHTML=items.map((item)=>{
+    const photo=getPhoto(item.name);
+    return`<div class="menu-card" onclick="showPage('menu')">
+      <div class="menu-card-img">${photo?`<img src="${photo}" alt="${item.name}" loading="lazy">`:`<div class="menu-card-img-placeholder">${EMOJIS[item.category]||'☕'}</div>`}
+      <span class="card-badge">Popular</span></div>
+      <div class="menu-card-body">
+        <div class="card-cat">${item.category}</div>
+        <div class="card-name">${item.name}</div>
+        <div class="card-desc">${item.description}</div>
+        <div class="card-footer"><div class="card-price">${fmtPrice(item.price)}</div><button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showPage('menu')">+ Add</button></div>
+      </div></div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// MENU
+// ══════════════════════════════════════════════════
+let activeCat='all';
+let selItem=null,selSize=null,selMilk=null,selExtras=[],qty=1;
+
+function initMenu(){
+  // Build cats bar
+  const bar=document.getElementById('catsBar');
+  if(!bar.children.length){
+    bar.innerHTML=`<button class="cat-btn active" data-cat="all" onclick="setCat('all',this)">✦ All Items</button>`+
+      MENU.categories.map(c=>`<button class="cat-btn" data-cat="${c.id}" onclick="setCat('${c.id}',this)">${c.icon} ${c.name}</button>`).join('');
+  }
+  renderMenu();
+}
+function setCat(cat,btn){
+  activeCat=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu();
+}
+function renderMenu(){
+  const grid=document.getElementById('menuGrid');
+  const search=document.getElementById('searchInput')?.value.toLowerCase().trim()||'';
+  let items=getMenuItems();
+  if(activeCat!=='all')items=items.filter(i=>i.category===activeCat);
+  if(search)items=items.filter(i=>i.name.toLowerCase().includes(search)||i.description.toLowerCase().includes(search));
+  if(!items.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><span class="icon">☕</span><h3>Nothing found</h3><p>Try a different category or search</p></div>`;return;}
+  grid.innerHTML=items.map(item=>{
+    const photo=getPhoto(item.name);
+    return`<div class="menu-card" onclick="openItem(${item.id})">
+      <div class="menu-card-img">
+        ${photo?`<img src="${photo}" alt="${item.name}" loading="lazy">`:`<div class="menu-card-img-placeholder">${EMOJIS[item.category]||'☕'}</div>`}
+        ${item.available===false?`<div class="sold-out-overlay">Sold Out</div>`:`<button class="btn btn-primary btn-sm" style="position:absolute;bottom:12px;right:12px;" onclick="event.stopPropagation();openItem(${item.id})">Add</button>`}
+        ${item.popular?'<span class="card-badge">Popular</span>':''}
+      </div>
+      <div class="menu-card-body">
+        <div class="card-cat">${item.category}</div>
+        <div class="card-name">${item.name}</div>
+        <div class="card-desc">${item.description}</div>
+        <div class="card-footer">
+          <div class="card-price">${fmtPrice(item.price)} <small>${item.sizes&&item.sizes.length>1?'from':''}</small></div>
+          <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openItem(${item.id})" ${item.available===false?'disabled':''}>${item.available===false?'Sold Out':'+ Add'}</button>
+        </div>
+      </div></div>`;
+  }).join('');
+}
+function openItem(id){
+  const item=getMenuItems().find(i=>i.id===id);
+  if(!item||item.available===false)return;
+  selItem=item;selSize=item.sizes&&item.sizes.length>0?item.sizes[0]:null;
+  selMilk=item.milks&&item.milks.length>0?item.milks[0]:null;
+  selExtras=[];qty=1;
+  buildModal(item);
+  document.getElementById('itemModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function handleModalClick(e){if(e.target.id==='itemModal')closeModal();}
+function closeModal(){document.getElementById('itemModal').classList.remove('open');document.body.style.overflow='';}
+function getModalTotal(){
+  if(!selItem)return 0;
+  return(selItem.price+(selSize?selSize.price:0)+selExtras.reduce((s,e)=>s+e.price,0))*qty;
+}
+function buildModal(item){
+  const photo=getPhoto(item.name);
+  const sizesHTML=item.sizes&&item.sizes.length>1?`<div class="modal-sec"><div class="modal-sec-lbl">Size</div><div class="chip-row">${item.sizes.map((s,i)=>`<button class="chip ${i===0?'selected':''}" onclick="pickSize(${i},this)">${s.label}${s.price>0?`<span style="font-size:0.72rem;color:rgba(253,246,236,0.35)">+${fmtPrice(s.price)}</span>`:''}</button>`).join('')}</div></div>`:'';
+  const milksHTML=item.milks&&item.milks.length>0?`<div class="modal-sec"><div class="modal-sec-lbl">Milk</div><div class="chip-row">${item.milks.map((m,i)=>`<button class="chip ${i===0?'selected':''}" onclick="pickMilk('${m}',this)">${m}</button>`).join('')}</div></div>`:'';
+  const extrasHTML=item.extras&&item.extras.length>0?`<div class="modal-sec"><div class="modal-sec-lbl">Add-ons</div>${item.extras.map(e=>`<div class="extra-row" data-extra='${JSON.stringify(e)}' onclick="toggleExtra(this)"><div style="display:flex;align-items:center;"><div class="extra-check">✓</div><span style="font-size:0.9rem;font-weight:500;">${e.label}</span></div><span style="font-weight:700;font-size:0.9rem;color:var(--caramel);">+${fmtPrice(e.price)}</span></div>`).join('')}</div>`:'';
+  document.getElementById('modalInner').innerHTML=`
+    ${photo?`<img class="modal-img" src="${photo}" alt="${item.name}">`:`<div class="modal-img-placeholder">${EMOJIS[item.category]||'☕'}</div>`}
+    <div class="modal-body">
+      <div class="modal-header"><div><div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--caramel);margin-bottom:6px;">${item.category}</div><h2 class="modal-title">${item.name}</h2></div><button class="modal-close" onclick="closeModal()">✕</button></div>
+      <p class="modal-desc">${item.description}</p>
+      ${sizesHTML}${milksHTML}${extrasHTML}
+      <div class="modal-sec"><div class="modal-sec-lbl">Quantity</div><div class="qty-ctrl"><button class="qty-btn" onclick="chgQty(-1)">−</button><span class="qty-num" id="qtyDisp">1</span><button class="qty-btn" onclick="chgQty(1)">+</button></div></div>
+    </div>
+    <div class="modal-foot">
+      <div><div class="modal-price-lbl">Total</div><div class="modal-price" id="modalPrice">${fmtPrice(item.price)}</div></div>
+      <button class="btn btn-primary" style="padding:14px 28px;" onclick="addToCart()">Add to Cart</button>
+    </div>`;
+}
+function pickSize(idx,btn){selSize=selItem.sizes[idx];document.querySelectorAll('#modalInner .chip-row:first-of-type .chip').forEach((b,i)=>b.classList.toggle('selected',i===idx));updateModalPrice();}
+function pickMilk(m,btn){selMilk=m;btn.closest('.chip-row').querySelectorAll('.chip').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');}
+function toggleExtra(el){el.classList.toggle('selected');const ex=JSON.parse(el.dataset.extra);if(el.classList.contains('selected'))selExtras.push(ex);else selExtras=selExtras.filter(e=>e.label!==ex.label);updateModalPrice();}
+function chgQty(d){qty=Math.max(1,qty+d);document.getElementById('qtyDisp').textContent=qty;updateModalPrice();}
+function updateModalPrice(){const el=document.getElementById('modalPrice');if(el)el.textContent=fmtPrice(getModalTotal());}
+function addToCart(){
+  if(!selItem)return;
+  const mods=[];
+  if(selSize&&selItem.sizes.length>1)mods.push(selSize.label);
+  if(selMilk&&selItem.milks.length>0)mods.push(selMilk);
+  selExtras.forEach(e=>mods.push(e.label));
+  const unitPrice=selItem.price+(selSize?selSize.price:0)+selExtras.reduce((s,e)=>s+e.price,0);
+  cartAdd({menuId:selItem.id,name:selItem.name,category:selItem.category,size:selSize?selSize.label:null,milk:selMilk,extras:selExtras,mods,qty,totalPrice:unitPrice});
+  closeModal();
+}
+
+// ══════════════════════════════════════════════════
+// CART PAGE
+// ══════════════════════════════════════════════════
+function getDiscount(sub){
+  const p=getPromo();
+  if(p==='BREW10')return Math.floor(sub*0.1);
+  if(p==='WELCOME')return 50;
+  return 0;
+}
+function renderCart(){
+  const items=getCart();
+  document.getElementById('emptyCart').style.display=items.length?'none':'block';
+  document.getElementById('cartFull').style.display=items.length?'grid':'none';
+  if(!items.length)return;
+  document.getElementById('itemCount').textContent=cartCount();
+  document.getElementById('cartItemsList').innerHTML=items.map(item=>{
+    const photo=getPhoto(item.name);
+    return`<div class="cart-item">
+      <div class="cart-thumb">${photo?`<img src="${photo}" alt="${item.name}">`:`${EMOJIS[item.category]||'☕'}`}</div>
+      <div class="cart-info">
+        <div class="cart-name">${item.name}</div>
+        <div class="cart-mods">${item.mods&&item.mods.length?item.mods.join(' · '):'Regular'}</div>
+        <div class="cart-controls">
+          <button class="mini-btn" onclick="cartUpdateQty(${item.cartId},${item.qty-1});renderCart()">−</button>
+          <span style="font-weight:700;min-width:20px;text-align:center;color:var(--cream);">${item.qty}</span>
+          <button class="mini-btn" onclick="cartUpdateQty(${item.cartId},${item.qty+1});renderCart()">+</button>
+          <button class="remove-btn" onclick="cartRemove(${item.cartId});renderCart()">✕ Remove</button>
+        </div>
+      </div>
+      <div class="cart-price">${fmtPrice(item.totalPrice*item.qty)}</div>
+    </div>`;
+  }).join('');
+  const sub=cartSubtotal(),disc=getDiscount(sub);
+  document.getElementById('cartSubtotal').textContent=fmtPrice(sub);
+  document.getElementById('cartTotal').textContent=fmtPrice(sub-disc);
+  const dr=document.getElementById('cartDiscRow');
+  if(disc>0){dr.style.display='flex';document.getElementById('cartDisc').textContent=`-${fmtPrice(disc)}`;}
+  else dr.style.display='none';
+  // restore promo input
+  const p=getPromo();
+  if(p)document.getElementById('promoInput').value=p;
+}
+function applyPromo(){
+  const code=document.getElementById('promoInput').value.trim().toUpperCase();
+  const msg=document.getElementById('promoMsg');
+  msg.style.display='block';
+  if(code==='BREW10'){setPromo(code);msg.style.color='#34D399';msg.textContent='✓ 10% off applied!';}
+  else if(code==='WELCOME'){setPromo(code);msg.style.color='#34D399';msg.textContent='✓ ₱50 discount applied!';}
+  else{setPromo(null);msg.style.color='#F87171';msg.textContent='✕ Invalid promo code';}
+  renderCart();
+}
+function clearCart(){if(confirm('Remove all items?')){cartClear();renderCart();}}
+
+// ══════════════════════════════════════════════════
+// CHECKOUT
+// ══════════════════════════════════════════════════
+let orderType='pickup',payMethod='cash';
+function initCheckout(){
+  if(cartCount()===0){document.getElementById('checkoutEmpty').style.display='block';document.getElementById('checkoutWrap').style.display='none';return;}
+  document.getElementById('checkoutEmpty').style.display='none';
+  document.getElementById('checkoutWrap').style.display='grid';
+  renderCheckoutSummary();
+  const u=getCurrentUser();
+  if(u){
+    const p=u.name.split(' ');
+    document.getElementById('fname').value=p[0]||'';
+    document.getElementById('lname').value=p.slice(1).join(' ')||'';
+    document.getElementById('email').value=u.email||'';
+  }
+}
+function setOrderType(t){
+  orderType=t;
+  document.getElementById('pickupCard').classList.toggle('active',t==='pickup');
+  document.getElementById('deliveryCard').classList.toggle('active',t==='delivery');
+  document.getElementById('pickupSec').style.display=t==='pickup'?'block':'none';
+  document.getElementById('deliverySec').style.display=t==='delivery'?'block':'none';
+  document.getElementById('coDelRow').style.display=t==='delivery'?'flex':'none';
+  renderCheckoutSummary();
+}
+function setPayMethod(el){
+  document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');payMethod=el.dataset.m;
+  document.getElementById('gcashBox').style.display=payMethod==='gcash'?'block':'none';
+  document.getElementById('mayaBox').style.display=payMethod==='maya'?'block':'none';
+}
+function renderCheckoutSummary(){
+  const items=getCart();
+  document.getElementById('checkoutItems').innerHTML=items.map(i=>`
+    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(200,135,58,0.07);gap:10px;">
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="font-size:1.2rem;">${EMOJIS[i.category]||'☕'}</span>
+        <div><div style="font-weight:600;font-size:0.875rem;color:var(--cream);">${i.name} × ${i.qty}</div>${i.mods&&i.mods.length?`<div style="font-size:0.75rem;color:rgba(253,246,236,0.35);">${i.mods.join(' · ')}</div>`:''}</div>
+      </div>
+      <span style="font-weight:700;font-size:0.9rem;white-space:nowrap;color:var(--caramel);">${fmtPrice(i.totalPrice*i.qty)}</span>
+    </div>`).join('');
+  const sub=cartSubtotal(),disc=getDiscount(sub),del=orderType==='delivery'?60:0,promo=getPromo();
+  document.getElementById('coSub').textContent=fmtPrice(sub);
+  document.getElementById('coTotal').textContent=fmtPrice(sub-disc+del);
+  const dr=document.getElementById('coDiscRow');
+  if(disc>0&&promo){dr.style.display='flex';document.getElementById('coDisc').textContent=`-${fmtPrice(disc)}`;document.getElementById('coPromoLbl').textContent=promo;}
+  else dr.style.display='none';
+}
+function placeOrder(){
+  const fname=document.getElementById('fname').value.trim();
+  const lname=document.getElementById('lname').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const email=document.getElementById('email').value.trim();
+  if(!fname||!lname||!phone){toast('Please fill in name and phone','error');return;}
+  if(orderType==='delivery'&&!document.getElementById('delAddr').value.trim()){toast('Enter delivery address','error');return;}
+  const btn=document.getElementById('placeBtn');btn.disabled=true;btn.textContent='Placing Order...';
+  const sub=cartSubtotal(),disc=getDiscount(sub),del=orderType==='delivery'?60:0;
+  const order={
+    id:'ORD-'+Date.now(),
+    shortId:shortId(),
+    items:getCart(),
+    customer:{firstName:fname,lastName:lname,name:`${fname} ${lname}`,phone,email},
+    paymentMethod:payMethod,orderType,
+    pickupTime:orderType==='pickup'?document.getElementById('pickupTime').value:null,
+    address:orderType==='delivery'?document.getElementById('delAddr').value.trim():null,
+    promoCode:getPromo()||null,
+    subtotal:sub,discount:disc,deliveryFee:del,total:sub-disc+del,
+    status:'pending',
+    userId:getCurrentUser()?.id||null,
+    createdAt:new Date().toISOString(),
+    estimatedWait:Math.floor(Math.random()*10)+10
+  };
+  const orders=getOrders();orders.push(order);saveOrders(orders);
+  // loyalty points
+  const u=getCurrentUser();
+  if(u){
+    const users=getUsers();
+    const idx=users.findIndex(x=>x.id===u.id);
+    if(idx!==-1){users[idx].points+=Math.floor(order.total/10);saveUsers(users);setCurrentUser(users[idx]);}
+  }
+  cartClear();setPromo(null);
+  btn.disabled=false;btn.textContent='Place Order ✓';
+  toast('Order placed successfully! ☕');
+  setTimeout(()=>{showPage('orders');setTimeout(()=>{document.getElementById('trackInput').value=order.shortId;trackOrder();},300);},800);
+}
+
+// ══════════════════════════════════════════════════
+// ORDERS
+// ══════════════════════════════════════════════════
+const STEPS=['pending','preparing','ready','completed'];
+const STEP_LABELS={pending:'Order Received',preparing:'Being Prepared',ready:'Ready for Pickup',completed:'Completed',cancelled:'Cancelled'};
+const STEP_ICONS={pending:'📋',preparing:'👨‍🍳',ready:'✅',completed:'🎉',cancelled:'❌'};
+
+function renderOrderCard(o){
+  const cur=STEPS.indexOf(o.status);
+  const stepsHTML=o.status!=='cancelled'?STEPS.map((s,i)=>`
+    <div class="track-step">
+      <div class="step-dot ${i<cur?'done':i===cur?'active':''}">${i<cur?'✓':STEP_ICONS[s]}</div>
+      <div class="step-body"><div class="step-lbl ${i===cur?'active-lbl':''}">${STEP_LABELS[s]}</div>${i===0&&o.estimatedWait?`<div class="step-sub">Est. wait: ${o.estimatedWait} min</div>`:''}</div>
+    </div>`).join(''):`<span class="badge badge-cancelled">Order Cancelled</span>`;
+  return`<div class="card" style="overflow:hidden;margin-bottom:24px;">
+    <div style="background:var(--ink-mid);padding:22px 28px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;border-bottom:1px solid var(--border);">
+      <div><div style="color:rgba(253,246,236,0.3);font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;">Order #${o.shortId}</div>
+        <div style="color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-top:4px;">${o.customer.name}</div>
+        <div style="color:rgba(253,246,236,0.3);font-size:0.8rem;margin-top:2px;">${fmtDate(o.createdAt)}</div>
+      </div>
+      <div style="text-align:right;"><span class="badge badge-${o.status}">${STEP_LABELS[o.status]||o.status}</span>
+        <div style="font-family:'Cormorant Garamond',serif;color:var(--caramel);font-size:1.5rem;font-weight:700;margin-top:8px;">${fmtPrice(o.total)}</div>
+      </div>
+    </div>
+    <div style="padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+      <div><div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(253,246,236,0.3);margin-bottom:16px;">Items Ordered</div>
+        ${o.items.map(i=>`<div style="display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;"><span style="font-size:1.2rem;">${EMOJIS[i.category]||'☕'}</span><div><div style="font-weight:600;font-size:0.9rem;color:var(--cream);">${i.name} × ${i.qty}</div>${i.mods&&i.mods.length?`<div style="font-size:0.75rem;color:rgba(253,246,236,0.3);">${i.mods.join(' · ')}</div>`:''}</div></div>`).join('')}
+      </div>
+      <div><div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(253,246,236,0.3);margin-bottom:16px;">Status</div>
+        <div class="track-steps">${stepsHTML}</div>
+      </div>
+    </div>
+    <div style="padding:16px 28px;border-top:1px solid rgba(200,135,58,0.08);display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-outline btn-sm" onclick="reorder('${o.id}')">🔄 Reorder</button>
+      <span style="font-size:0.8rem;color:rgba(253,246,236,0.3);">${o.orderType==='delivery'?'🏍️ Delivery':'🏠 Pickup'} · ${o.paymentMethod?.toUpperCase()}</span>
+    </div>
+  </div>`;
+}
+function renderOrders(){
+  const el=document.getElementById('historyOrders');
+  const u=getCurrentUser();
+  const orders=getOrders().filter(o=>u?o.userId===u.id:true).reverse();
+  if(!orders.length){el.innerHTML=`<div class="empty-state"><span class="icon">📋</span><h3>No orders yet</h3><p style="margin-bottom:24px;">Your order history will appear here</p><button class="btn btn-primary" onclick="showPage('menu')">Order Now</button></div>`;return;}
+  el.innerHTML=orders.map(o=>renderOrderCard(o)).join('');
+}
+function trackOrder(){
+  const id=document.getElementById('trackInput').value.trim().toUpperCase();
+  if(!id)return;
+  const orders=getOrders();
+  const o=orders.find(x=>x.shortId===id||x.id===id);
+  const el=document.getElementById('trackedOrder');
+  if(!o){toast('Order not found','error');el.style.display='none';return;}
+  el.style.display='block';
+  el.innerHTML=`<h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:20px;color:var(--cream);">Tracked Order</h2>${renderOrderCard(o)}`;
+}
+function reorder(id){
+  const o=getOrders().find(x=>x.id===id);
+  if(!o)return;
+  o.items.forEach(i=>cartAdd({...i,cartId:undefined}));
+  toast('Items added to cart!');
+  setTimeout(()=>showPage('cart'),800);
+}
+
+// ══════════════════════════════════════════════════
+// ACCOUNT
+// ══════════════════════════════════════════════════
+function initAccount(){
+  const u=getCurrentUser();
+  document.getElementById('guestView').style.display=u?'none':'block';
+  document.getElementById('userView').style.display=u?'grid':'none';
+  if(!u)return;
+  document.getElementById('acctPoints').textContent=u.points||0;
+  document.getElementById('pName').value=u.name;
+  document.getElementById('pEmail').value=u.email;
+  // Update nav link
+  const al=document.getElementById('authNavLink');
+  if(al){al.textContent=u.name.split(' ')[0];al.onclick=e=>{e.preventDefault();showPage('account');};}
+}
+function showAcctTab(tab,link){
+  document.querySelectorAll('[id^="acct-"]').forEach(t=>t.style.display='none');
+  document.getElementById(`acct-${tab}`).style.display='block';
+  document.querySelectorAll('.acct-nav a').forEach(a=>a.classList.remove('active'));
+  if(link)link.classList.add('active');
+  if(tab==='orders'){
+    const u=getCurrentUser();
+    const orders=getOrders().filter(o=>u?o.userId===u.id:false).reverse();
+    const el=document.getElementById('acctOrdersList');
+    if(!orders.length){el.innerHTML=`<div class="empty-state"><span class="icon">📋</span><h3>No orders yet</h3><button class="btn btn-primary" onclick="showPage('menu')" style="margin-top:16px;">Order Now</button></div>`;return;}
+    el.innerHTML=orders.map(o=>`<div class="card" style="padding:22px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+        <div><div style="font-weight:700;font-size:0.95rem;color:var(--cream);">Order #${o.shortId}</div><div style="font-size:0.8rem;color:rgba(253,246,236,0.3);">${fmtDate(o.createdAt)}</div></div>
+        <div style="text-align:right;"><span class="badge badge-${o.status}">${o.status}</span><div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.2rem;margin-top:6px;color:var(--caramel);">${fmtPrice(o.total)}</div></div>
+      </div>
+      <div style="font-size:0.85rem;color:rgba(253,246,236,0.35);margin-bottom:14px;">${o.items.map(i=>`${i.name} × ${i.qty}`).join(', ')}</div>
+      <button class="btn btn-sm" style="background:rgba(200,135,58,0.1);color:var(--caramel);border:1px solid rgba(200,135,58,0.2);" onclick="reorder('${o.id}')">🔄 Reorder</button>
+    </div>`).join('');
+  }
+}
+function saveProfile(){
+  const name=document.getElementById('pName').value.trim();
+  if(!name){toast('Name cannot be empty','error');return;}
+  const u=getCurrentUser();u.name=name;
+  const users=getUsers();const idx=users.findIndex(x=>x.id===u.id);
+  if(idx!==-1){users[idx].name=name;saveUsers(users);}
+  setCurrentUser(u);toast('Profile updated!');
+  const al=document.getElementById('authNavLink');if(al)al.textContent=name.split(' ')[0];
+}
+function doLogout(){
+  setCurrentUser(null);toast('Signed out ☕');
+  setTimeout(()=>{showPage('home');updateAuthNav();},800);
+}
+function updateAuthNav(){
+  const u=getCurrentUser();
+  const al=document.getElementById('authNavLink');
+  if(!al)return;
+  if(u){al.textContent=u.name.split(' ')[0];al.onclick=e=>{e.preventDefault();showPage('account');};}
+  else{al.textContent='Sign In';al.onclick=handleAuthClick;}
+}
+
+// ══════════════════════════════════════════════════
+// AUTH MODAL
+// ══════════════════════════════════════════════════
+function showAuthModal(){
+  document.getElementById('authModalInner').innerHTML=`
+    <div style="background:var(--ink);padding:28px 32px;text-align:center;border-bottom:1px solid var(--border);border-radius:24px 24px 0 0;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--caramel);font-weight:700;">Brewhaus</div>
+      <div style="font-size:0.78rem;color:rgba(253,246,236,0.3);letter-spacing:2px;text-transform:uppercase;margin-top:4px;">Your coffee, your way</div>
+    </div>
+    <div style="padding:28px 32px;">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login',this)">Sign In</button>
+        <button class="auth-tab" onclick="switchAuthTab('register',this)">Create Account</button>
+      </div>
+      <div id="authLoginForm">
+        <div class="form-group"><label>Email</label><input type="email" id="authEmail" placeholder="you@email.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="authPass" placeholder="••••••••"></div>
+        <button class="btn btn-primary btn-block" style="font-size:1rem;padding:14px;" onclick="doLogin()">Sign In</button>
+      </div>
+      <div id="authRegForm" style="display:none;">
+        <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Your name"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="you@email.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Min 6 characters"></div>
+        <button class="btn btn-primary btn-block" style="font-size:1rem;padding:14px;" onclick="doRegister()">Create Account</button>
+      </div>
+    </div>`;
+  document.getElementById('authModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function handleAuthModalClick(e){if(e.target.id==='authModal'){document.getElementById('authModal').classList.remove('open');document.body.style.overflow='';}}
+function switchAuthTab(tab,btn){
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('authLoginForm').style.display=tab==='login'?'block':'none';
+  document.getElementById('authRegForm').style.display=tab==='register'?'block':'none';
+}
+function doLogin(){
+  const email=document.getElementById('authEmail').value.trim();
+  const pass=document.getElementById('authPass').value;
+  if(!email||!pass){toast('Fill in all fields','error');return;}
+  const users=getUsers();
+  const u=users.find(x=>x.email===email&&x.password===pass);
+  if(!u){toast('Invalid email or password','error');return;}
+  setCurrentUser(u);
+  document.getElementById('authModal').classList.remove('open');
+  document.body.style.overflow='';
+  toast(`Welcome back, ${u.name.split(' ')[0]}! ☕`);
+  updateAuthNav();
+  setTimeout(()=>location.reload(),800);
+}
+function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  if(!name||!email||!pass){toast('Fill in all fields','error');return;}
+  if(pass.length<6){toast('Password must be 6+ characters','error');return;}
+  const users=getUsers();
+  if(users.find(u=>u.email===email)){toast('Email already registered','error');return;}
+  const u={id:'U-'+Date.now(),name,email,password:pass,points:0,createdAt:new Date().toISOString()};
+  users.push(u);saveUsers(users);setCurrentUser(u);
+  document.getElementById('authModal').classList.remove('open');
+  document.body.style.overflow='';
+  toast(`Welcome, ${name.split(' ')[0]}! ☕`);
+  updateAuthNav();
+  setTimeout(()=>location.reload(),800);
+}
+
+// ══════════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════════
+function adminLogin(){
+  const pass=document.getElementById('adminPass').value;
+  if(pass===ADMIN_PASS){
+    document.getElementById('adminLoginGate').style.display='none';
+    document.getElementById('adminDash').style.display='grid';
+    loadAdminDash();
+  }else{
+    const e=document.getElementById('adminLoginErr');e.style.display='block';e.textContent='Incorrect password.';
+  }
+}
+function showAdminSec(name,link){
+  document.querySelectorAll('[id^="asec-"]').forEach(s=>s.style.display='none');
+  document.getElementById(`asec-${name}`).style.display='block';
+  document.querySelectorAll('.admin-nav a').forEach(a=>a.classList.remove('active'));
+  if(link)link.classList.add('active');
+  if(name==='orders')loadAdminOrders();
+  if(name==='menu')loadAdminMenu();
+  if(name==='dash')loadAdminDash();
+}
+function loadAdminDash(){
+  const orders=getOrders();const users=getUsers();
+  const today=new Date().toDateString();
+  const todayOrders=orders.filter(o=>new Date(o.createdAt).toDateString()===today);
+  const stats=[
+    {icon:'📋',val:todayOrders.length,lbl:"Today's Orders"},
+    {icon:'💰',val:fmtPrice(todayOrders.reduce((s,o)=>s+o.total,0)),lbl:"Today's Revenue"},
+    {icon:'⏳',val:orders.filter(o=>o.status==='pending').length,lbl:'Pending Orders'},
+    {icon:'👥',val:users.length,lbl:'Total Users'},
+    {icon:'📦',val:orders.length,lbl:'All Time Orders'},
+    {icon:'📈',val:fmtPrice(orders.reduce((s,o)=>s+o.total,0)),lbl:'Total Revenue'},
+  ];
+  document.getElementById('adminStats').innerHTML=stats.map(c=>`<div class="stat-card"><div class="stat-icon">${c.icon}</div><div class="stat-num">${c.val}</div><div class="stat-lbl">${c.lbl}</div></div>`).join('');
+  const recent=orders.slice(-6).reverse();
+  document.getElementById('adminRecent').innerHTML=recent.length?recent.map(o=>`
+    <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(200,135,58,0.07);align-items:center;flex-wrap:wrap;gap:8px;">
+      <div><span style="font-weight:700;color:var(--cream);">#${o.shortId}</span><span style="color:rgba(253,246,236,0.35);margin-left:10px;font-size:0.875rem;">${o.customer.name}</span></div>
+      <div style="display:flex;align-items:center;gap:12px;"><span style="font-weight:600;color:var(--caramel);">${fmtPrice(o.total)}</span><span class="badge badge-${o.status}">${o.status}</span></div>
+    </div>`).join(''):'<p style="color:rgba(253,246,236,0.3);">No orders yet.</p>';
+}
+function loadAdminOrders(){
+  const tbody=document.getElementById('adminOrdersBody');
+  const orders=getOrders().reverse();
+  if(!orders.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:32px;color:rgba(253,246,236,0.3);">No orders yet</td></tr>';return;}
+  tbody.innerHTML=orders.map(o=>`<tr>
+    <td><strong style="color:var(--cream);">#${o.shortId}</strong></td>
+    <td style="color:var(--cream);">${o.customer.name}<br><span style="font-size:0.75rem;color:rgba(253,246,236,0.3);">${o.customer.phone}</span></td>
+    <td style="max-width:200px;font-size:0.82rem;color:rgba(253,246,236,0.4);">${o.items.map(i=>`${i.name}×${i.qty}`).join(', ')}</td>
+    <td><strong style="color:var(--caramel);">${fmtPrice(o.total)}</strong></td>
+    <td>${o.orderType==='delivery'?'🏍️ Delivery':'🏠 Pickup'}</td>
+    <td style="font-size:0.8rem;">${fmtDate(o.createdAt)}</td>
+    <td><select class="status-sel" onchange="updateOrderStatus('${o.id}',this.value)">${['pending','preparing','ready','completed','cancelled'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}</select></td>
+  </tr>`).join('');
+}
+function updateOrderStatus(id,status){
+  const orders=getOrders();const idx=orders.findIndex(o=>o.id===id);
+  if(idx===-1)return;
+  orders[idx].status=status;saveOrders(orders);
+  toast(`Order updated to "${status}"`);
+}
+function loadAdminMenu(){
+  const el=document.getElementById('adminMenuGrid');
+  const items=getMenuItems();
+  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;">${items.map(item=>{
+    const photo=getPhoto(item.name);
+    return`<div class="card" style="padding:0;overflow:hidden;">
+      <div style="height:130px;overflow:hidden;position:relative;background:var(--ink-mid);">
+        ${photo?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;opacity:0.8;" alt="${item.name}">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;">${EMOJIS[item.category]||'☕'}</div>`}
+        ${item.available===false?'<div style="position:absolute;inset:0;background:rgba(8,6,4,0.7);display:flex;align-items:center;justify-content:center;color:rgba(253,246,236,0.6);font-weight:700;font-size:0.85rem;letter-spacing:1px;">SOLD OUT</div>':''}
+      </div>
+      <div style="padding:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:700;font-size:0.9rem;color:var(--cream);">${item.name}</div><div style="font-size:0.75rem;color:rgba(253,246,236,0.3);">${item.category} · ${fmtPrice(item.price)}</div></div>
+          <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:rgba(253,246,236,0.35);cursor:pointer;">
+            <input type="checkbox" ${item.available!==false?'checked':''} onchange="toggleItemAvail(${item.id},this.checked)" style="width:auto;accent-color:var(--caramel);">
+            Available
+          </label>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+function toggleItemAvail(id,available){
+  const overrides=getMenuOverrides();
+  overrides[id]={...overrides[id],available};
+  saveMenuOverrides(overrides);
+  toast(available?'Item now available':'Item marked sold out');
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  updateCartBadge();
+  updateAuthNav();
+  initReveal();
+  renderPopular();
+
+  // Handle hash routing
+  const hash=window.location.hash.replace('#','');
+  if(['menu','cart','checkout','orders','account','admin'].includes(hash))showPage(hash);
 });
 </script>
 </body>
