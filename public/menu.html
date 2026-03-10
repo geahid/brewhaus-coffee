@@ -22,36 +22,30 @@
   </div>
 </nav>
 
-<!-- Page Header -->
-<div style="background:var(--ink);padding:52px 28px 44px;position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(200,135,58,0.08),transparent 60%);"></div>
+<div class="page-header">
+  <div class="page-header-bg"></div>
   <div class="container" style="position:relative;">
     <div class="section-label" style="margin-bottom:12px;">Handcrafted Daily</div>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.5rem);color:var(--cream);font-weight:600;margin-bottom:8px;">Our Full Menu</h1>
-    <p style="color:rgba(253,246,236,0.45);font-weight:300;font-size:1rem;">Fresh, made to order, exactly how you like it.</p>
+    <p style="color:rgba(253,246,236,0.35);font-weight:300;font-size:1rem;">Fresh, made to order, exactly how you like it.</p>
   </div>
 </div>
 
-<!-- Menu Content -->
 <div class="container" style="padding-top:44px;padding-bottom:80px;">
-  <!-- Search -->
   <div style="margin-bottom:32px;max-width:460px;position:relative;">
-    <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:1.1rem;pointer-events:none;">🔍</span>
+    <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:rgba(253,246,236,0.3);font-size:1.1rem;pointer-events:none;">🔍</span>
     <input type="text" id="searchInput" placeholder="Search drinks, food..." style="padding-left:46px;">
   </div>
 
-  <!-- Categories -->
   <div class="categories-bar" id="catsBar">
     <button class="cat-btn active" data-cat="all">✦ All Items</button>
   </div>
 
-  <!-- Grid -->
   <div class="menu-grid" id="menuGrid">
     <div class="loader"><div class="spinner"></div></div>
   </div>
 </div>
 
-<!-- Item Modal -->
 <div class="modal-overlay" id="itemModal">
   <div class="modal" id="modalInner"></div>
 </div>
@@ -101,15 +95,11 @@ function renderMenu(search='') {
     return `
       <div class="menu-card" onclick="openItem(${item.id})">
         <div class="menu-card-img">
-          ${photo
-            ? `<img src="${photo}" alt="${item.name}" loading="lazy">`
-            : `<div class="menu-card-img-placeholder">${EMOJIS[item.category]||'☕'}</div>`
-          }
+          ${photo ? `<img src="${photo}" alt="${item.name}" loading="lazy">` : `<div class="menu-card-img-placeholder">${EMOJIS[item.category]||'☕'}</div>`}
           <div class="card-hover-overlay"></div>
           ${item.available !== false
             ? `<button class="card-quick-btn" onclick="event.stopPropagation();openItem(${item.id})">Customize & Add</button>`
-            : `<div class="sold-out-overlay">Sold Out</div>`
-          }
+            : `<div class="sold-out-overlay">Sold Out</div>`}
           ${item.popular ? '<span class="badge badge-popular card-badge">Popular</span>' : ''}
         </div>
         <div class="menu-card-body">
@@ -118,8 +108,7 @@ function renderMenu(search='') {
           <div class="card-desc">${item.description}</div>
           <div class="card-footer">
             <div class="card-price">${formatPrice(item.price)} <small>${item.sizes&&item.sizes.length>1?'from':''}</small></div>
-            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openItem(${item.id})"
-              ${item.available===false?'disabled':''}>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openItem(${item.id})" ${item.available===false?'disabled':''}>
               ${item.available===false?'Sold Out':'+ Add'}
             </button>
           </div>
@@ -137,19 +126,13 @@ function openItem(id) {
   selMilk=item.milks&&item.milks.length>0?item.milks[0]:null;
   selExtras=[]; qty=1;
   buildModal(item);
-  const overlay = document.getElementById('itemModal');
-  overlay.classList.add('open');
+  document.getElementById('itemModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-document.getElementById('itemModal').addEventListener('click', e => {
-  if (e.target.id==='itemModal') closeModal();
-});
+document.getElementById('itemModal').addEventListener('click', e => { if (e.target.id==='itemModal') closeModal(); });
 
-function closeModal() {
-  document.getElementById('itemModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
+function closeModal() { document.getElementById('itemModal').classList.remove('open'); document.body.style.overflow = ''; }
 
 function getTotal() {
   if (!selItem) return 0;
@@ -160,58 +143,21 @@ function getTotal() {
 function buildModal(item) {
   const photo = getItemPhoto(item.name);
   const modal = document.getElementById('modalInner');
-
-  const sizesHTML = item.sizes&&item.sizes.length>1 ? `
-    <div class="modal-sec">
-      <div class="modal-sec-lbl">Size</div>
-      <div class="chip-row" id="sizeChips">
-        ${item.sizes.map((s,i)=>`
-          <button class="chip ${i===0?'selected':''}" onclick="pickSize(${i},this)">
-            ${s.label}
-            ${s.price>0?`<span style="font-size:0.72rem;color:var(--text-muted)">+${formatPrice(s.price)}</span>`:''}
-          </button>`).join('')}
-      </div>
-    </div>` : '';
-
-  const milksHTML = item.milks&&item.milks.length>0 ? `
-    <div class="modal-sec">
-      <div class="modal-sec-lbl">Milk</div>
-      <div class="chip-row" id="milkChips">
-        ${item.milks.map((m,i)=>`
-          <button class="chip ${i===0?'selected':''}" onclick="pickMilk('${m}',this)">${m}</button>`).join('')}
-      </div>
-    </div>` : '';
-
-  const extrasHTML = item.extras&&item.extras.length>0 ? `
-    <div class="modal-sec">
-      <div class="modal-sec-lbl">Add-ons</div>
-      ${item.extras.map(e=>`
-        <div class="extra-row" data-extra='${JSON.stringify(e)}' onclick="toggleExtra(this)">
-          <div style="display:flex;align-items:center;">
-            <div class="extra-check">✓</div>
-            <span style="font-size:0.9rem;font-weight:500;">${e.label}</span>
-          </div>
-          <span style="font-weight:700;font-size:0.9rem;color:var(--caramel);">+${formatPrice(e.price)}</span>
-        </div>`).join('')}
-    </div>` : '';
-
+  const sizesHTML = item.sizes&&item.sizes.length>1 ? `<div class="modal-sec"><div class="modal-sec-lbl">Size</div><div class="chip-row" id="sizeChips">${item.sizes.map((s,i)=>`<button class="chip ${i===0?'selected':''}" onclick="pickSize(${i},this)">${s.label}${s.price>0?`<span style="font-size:0.72rem;color:rgba(253,246,236,0.35)">+${formatPrice(s.price)}</span>`:''}</button>`).join('')}</div></div>` : '';
+  const milksHTML = item.milks&&item.milks.length>0 ? `<div class="modal-sec"><div class="modal-sec-lbl">Milk</div><div class="chip-row" id="milkChips">${item.milks.map((m,i)=>`<button class="chip ${i===0?'selected':''}" onclick="pickMilk('${m}',this)">${m}</button>`).join('')}</div></div>` : '';
+  const extrasHTML = item.extras&&item.extras.length>0 ? `<div class="modal-sec"><div class="modal-sec-lbl">Add-ons</div>${item.extras.map(e=>`<div class="extra-row" data-extra='${JSON.stringify(e)}' onclick="toggleExtra(this)"><div style="display:flex;align-items:center;"><div class="extra-check">✓</div><span style="font-size:0.9rem;font-weight:500;">${e.label}</span></div><span style="font-weight:700;font-size:0.9rem;color:var(--caramel);">+${formatPrice(e.price)}</span></div>`).join('')}</div>` : '';
   modal.innerHTML = `
-    ${photo
-      ? `<img class="modal-img" src="${photo}" alt="${item.name}">`
-      : `<div class="modal-img-placeholder">${EMOJIS[item.category]||'☕'}</div>`
-    }
+    ${photo ? `<img class="modal-img" src="${photo}" alt="${item.name}">` : `<div class="modal-img-placeholder">${EMOJIS[item.category]||'☕'}</div>`}
     <div class="modal-body">
       <div class="modal-header">
         <div>
-          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--caramel);margin-bottom:6px;">${item.category}</div>
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--caramel);margin-bottom:6px;">${item.category}</div>
           <h2 class="modal-title">${item.name}</h2>
         </div>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
       <p class="modal-desc">${item.description}</p>
-      ${sizesHTML}
-      ${milksHTML}
-      ${extrasHTML}
+      ${sizesHTML}${milksHTML}${extrasHTML}
       <div class="modal-sec">
         <div class="modal-sec-lbl">Quantity</div>
         <div class="qty-row">
@@ -224,34 +170,16 @@ function buildModal(item) {
       </div>
     </div>
     <div class="modal-foot">
-      <div>
-        <div class="modal-price-lbl">Total</div>
-        <div class="modal-price" id="modalPrice">${formatPrice(item.price)}</div>
-      </div>
+      <div><div class="modal-price-lbl">Total</div><div class="modal-price" id="modalPrice">${formatPrice(item.price)}</div></div>
       <button class="btn btn-primary" style="padding:14px 28px;font-size:0.95rem;" onclick="addToCart()">Add to Cart</button>
     </div>`;
 }
 
-function pickSize(idx, btn) {
-  selSize = selItem.sizes[idx];
-  document.querySelectorAll('#sizeChips .chip').forEach((b,i)=>b.classList.toggle('selected',i===idx));
-  updateModalPrice();
-}
-function pickMilk(m, btn) {
-  selMilk = m;
-  document.querySelectorAll('#milkChips .chip').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
-function toggleExtra(el) {
-  el.classList.toggle('selected');
-  const ex = JSON.parse(el.dataset.extra);
-  if (el.classList.contains('selected')) selExtras.push(ex);
-  else selExtras = selExtras.filter(e=>e.label!==ex.label);
-  updateModalPrice();
-}
+function pickSize(idx, btn) { selSize = selItem.sizes[idx]; document.querySelectorAll('#sizeChips .chip').forEach((b,i)=>b.classList.toggle('selected',i===idx)); updateModalPrice(); }
+function pickMilk(m, btn) { selMilk = m; document.querySelectorAll('#milkChips .chip').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); }
+function toggleExtra(el) { el.classList.toggle('selected'); const ex = JSON.parse(el.dataset.extra); if (el.classList.contains('selected')) selExtras.push(ex); else selExtras = selExtras.filter(e=>e.label!==ex.label); updateModalPrice(); }
 function chgQty(d) { qty=Math.max(1,qty+d); document.getElementById('qtyDisp').textContent=qty; updateModalPrice(); }
 function updateModalPrice() { const el=document.getElementById('modalPrice'); if(el) el.textContent=formatPrice(getTotal()); }
-
 function addToCart() {
   if (!selItem) return;
   const mods = [];
@@ -259,9 +187,7 @@ function addToCart() {
   if (selMilk&&selItem.milks.length>0) mods.push(selMilk);
   selExtras.forEach(e=>mods.push(e.label));
   const unitPrice = selItem.price + (selSize?selSize.price:0) + selExtras.reduce((s,e)=>s+e.price,0);
-  Cart.add({ menuId:selItem.id, name:selItem.name, category:selItem.category,
-    size:selSize?selSize.label:null, milk:selMilk, extras:selExtras,
-    mods, qty, totalPrice:unitPrice });
+  Cart.add({ menuId:selItem.id, name:selItem.name, category:selItem.category, size:selSize?selSize.label:null, milk:selMilk, extras:selExtras, mods, qty, totalPrice:unitPrice });
   closeModal();
 }
 

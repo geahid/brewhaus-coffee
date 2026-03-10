@@ -7,17 +7,19 @@
 </head>
 <body>
 
-<div id="loginGate" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink);">
-  <div style="background:white;border-radius:24px;padding:40px 36px;width:100%;max-width:380px;margin:24px;box-shadow:var(--shadow-xl);">
+<div id="loginGate" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink);position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(200,135,58,0.06),transparent 60%);"></div>
+  <div style="background:var(--ink-soft);border:1px solid rgba(200,135,58,0.18);border-radius:24px;padding:40px 36px;width:100%;max-width:380px;margin:24px;box-shadow:var(--shadow-xl);position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--caramel),var(--gold),var(--caramel),transparent);background-size:200% 100%;animation:borderFlow 3s ease infinite;"></div>
     <div style="text-align:center;margin-bottom:28px;">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--caramel);font-weight:700;margin-bottom:4px;">Brewhaus</div>
-      <div style="font-size:0.8rem;color:var(--text-muted);letter-spacing:1px;">Admin Dashboard</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--caramel);font-weight:700;margin-bottom:4px;text-shadow:0 0 20px rgba(200,135,58,0.3);">Brewhaus</div>
+      <div style="font-size:0.72rem;color:rgba(253,246,236,0.3);letter-spacing:2px;text-transform:uppercase;">Admin Dashboard</div>
     </div>
     <div class="form-group"><label>Admin Password</label><input type="password" id="adminPass" placeholder="Enter password"></div>
     <button class="btn btn-primary btn-block" style="font-size:1rem;padding:14px;" onclick="doLogin()">Access Dashboard</button>
-    <div id="loginErr" style="color:var(--danger);font-size:0.82rem;margin-top:12px;text-align:center;display:none;"></div>
-    <div style="margin-top:20px;padding:14px;background:var(--cream-warm);border-radius:10px;font-size:0.78rem;color:var(--text-muted);">
-      Default: <code style="background:var(--cream-mid);padding:2px 6px;border-radius:4px;">brewhaus-admin-2024</code>
+    <div id="loginErr" style="color:#F87171;font-size:0.82rem;margin-top:12px;text-align:center;display:none;"></div>
+    <div style="margin-top:20px;padding:14px;background:rgba(200,135,58,0.06);border-radius:10px;font-size:0.78rem;color:rgba(253,246,236,0.35);border:1px solid rgba(200,135,58,0.12);">
+      Default: <code style="background:rgba(200,135,58,0.1);color:var(--caramel);padding:2px 8px;border-radius:4px;">brewhaus-admin-2024</code>
     </div>
   </div>
 </div>
@@ -29,34 +31,34 @@
       <li><a href="#" class="active" onclick="showSec('dash',this)">📊 Dashboard</a></li>
       <li><a href="#" onclick="showSec('orders',this)">📋 All Orders</a></li>
       <li><a href="#" onclick="showSec('menu',this)">🍽️ Menu</a></li>
-      <li style="margin-top:auto;padding-top:24px;border-top:1px solid rgba(253,246,236,0.08);">
-        <a href="/" style="margin-top:16px;">← Back to Site</a>
+      <li style="margin-top:auto;padding-top:24px;border-top:1px solid rgba(200,135,58,0.1);">
+        <a href="/" style="margin-top:16px;color:rgba(253,246,236,0.3);">← Back to Site</a>
       </li>
     </ul>
   </div>
   <div class="admin-main">
     <div id="sec-dash">
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;margin-bottom:28px;">Dashboard</h2>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;margin-bottom:28px;color:var(--cream);">Dashboard</h2>
       <div class="stat-grid" id="statGrid"><div class="loader"><div class="spinner"></div></div></div>
       <div class="card" style="padding:28px;">
-        <h3 style="font-weight:700;margin-bottom:18px;">Recent Orders</h3>
+        <h3 style="font-weight:700;margin-bottom:18px;color:var(--cream);">Recent Orders</h3>
         <div id="recentList"></div>
       </div>
     </div>
     <div id="sec-orders" style="display:none;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
-        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;">All Orders</h2>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:var(--cream);">All Orders</h2>
         <button class="btn btn-outline-dark btn-sm" onclick="loadAllOrders()">🔄 Refresh</button>
       </div>
       <div class="card" style="padding:0;overflow:auto;">
         <table class="data-table">
           <thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Type</th><th>Date</th><th>Status</th></tr></thead>
-          <tbody id="ordersBody"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted);">Loading...</td></tr></tbody>
+          <tbody id="ordersBody"><tr><td colspan="7" style="text-align:center;padding:32px;color:rgba(253,246,236,0.3);">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
     <div id="sec-menu" style="display:none;">
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;margin-bottom:28px;">Menu Management</h2>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;margin-bottom:28px;color:var(--cream);">Menu Management</h2>
       <div id="menuMgmt"><div class="loader"><div class="spinner"></div></div></div>
     </div>
   </div>
@@ -74,7 +76,6 @@ async function doLogin() {
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('adminPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 });
-
 function showSec(name,link) {
   document.querySelectorAll('[id^="sec-"]').forEach(s=>s.style.display='none');
   document.getElementById(`sec-${name}`).style.display='block';
@@ -83,7 +84,6 @@ function showSec(name,link) {
   if (name==='orders') loadAllOrders();
   if (name==='menu') loadMenuMgmt();
 }
-
 async function loadDash() {
   try {
     const [sRes,oRes]=await Promise.all([fetch('/api/admin/stats'),fetch('/api/admin/orders')]);
@@ -97,23 +97,22 @@ async function loadDash() {
       {icon:'📈',val:`₱${(s.totalRevenue||0).toLocaleString()}`,lbl:'Total Revenue'},
     ].map(c=>`<div class="stat-card"><div class="stat-icon">${c.icon}</div><div class="stat-num">${c.val}</div><div class="stat-lbl">${c.lbl}</div></div>`).join('');
     document.getElementById('recentList').innerHTML=orders.slice(0,6).map(o=>`
-      <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(200,135,58,0.08);align-items:center;flex-wrap:wrap;gap:8px;">
-        <div><span style="font-weight:700;">#${o.shortId}</span><span style="color:var(--text-muted);margin-left:10px;font-size:0.875rem;">${o.customer.name}</span></div>
-        <div style="display:flex;align-items:center;gap:12px;"><span style="font-weight:600;">${formatPrice(o.total)}</span><span class="badge badge-${o.status}">${o.status}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(200,135,58,0.07);align-items:center;flex-wrap:wrap;gap:8px;">
+        <div><span style="font-weight:700;color:var(--cream);">#${o.shortId}</span><span style="color:rgba(253,246,236,0.35);margin-left:10px;font-size:0.875rem;">${o.customer.name}</span></div>
+        <div style="display:flex;align-items:center;gap:12px;"><span style="font-weight:600;color:var(--caramel);">${formatPrice(o.total)}</span><span class="badge badge-${o.status}">${o.status}</span></div>
       </div>`).join('');
   } catch {}
 }
-
 async function loadAllOrders() {
   const tbody=document.getElementById('ordersBody');
   try {
     const r=await fetch('/api/admin/orders'); const orders=await r.json();
     tbody.innerHTML=orders.map(o=>`
       <tr>
-        <td><strong>#${o.shortId}</strong></td>
-        <td>${o.customer.name}<br><span style="font-size:0.75rem;color:var(--text-muted);">${o.customer.phone}</span></td>
-        <td style="max-width:200px;font-size:0.82rem;color:var(--text-muted);">${o.items.map(i=>`${i.name}×${i.qty}`).join(', ')}</td>
-        <td><strong>${formatPrice(o.total)}</strong></td>
+        <td><strong style="color:var(--cream);">#${o.shortId}</strong></td>
+        <td style="color:var(--cream);">${o.customer.name}<br><span style="font-size:0.75rem;color:rgba(253,246,236,0.3);">${o.customer.phone}</span></td>
+        <td style="max-width:200px;font-size:0.82rem;color:rgba(253,246,236,0.4);">${o.items.map(i=>`${i.name}×${i.qty}`).join(', ')}</td>
+        <td><strong style="color:var(--caramel);">${formatPrice(o.total)}</strong></td>
         <td>${o.orderType==='delivery'?'🏍️ Delivery':'🏠 Pickup'}</td>
         <td style="font-size:0.8rem;">${formatDate(o.createdAt)}</td>
         <td>
@@ -122,15 +121,13 @@ async function loadAllOrders() {
           </select>
         </td>
       </tr>`).join('');
-  } catch { tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);">Failed to load</td></tr>'; }
+  } catch { tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:24px;color:rgba(253,246,236,0.3);">Failed to load</td></tr>'; }
 }
-
 async function updateSt(id, status) {
   const r=await fetch(`/api/admin/orders/${id}/status`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
   const d=await r.json();
   if (d.success) Toast.show(`Order updated to "${status}"`);
 }
-
 async function loadMenuMgmt() {
   const el=document.getElementById('menuMgmt');
   try {
@@ -140,16 +137,16 @@ async function loadMenuMgmt() {
         const photo=getItemPhoto(item.name);
         return `<div class="card" style="padding:0;overflow:hidden;">
           <div style="height:140px;overflow:hidden;position:relative;">
-            ${photo?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;" alt="${item.name}">`:`<div style="width:100%;height:100%;background:var(--cream-warm);display:flex;align-items:center;justify-content:center;font-size:3rem;">${EMOJIS[item.category]||'☕'}</div>`}
-            ${item.available===false?'<div style="position:absolute;inset:0;background:rgba(10,7,5,0.6);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;letter-spacing:1px;">SOLD OUT</div>':''}
+            ${photo?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;opacity:0.8;" alt="${item.name}">`:`<div style="width:100%;height:100%;background:var(--espresso);display:flex;align-items:center;justify-content:center;font-size:3rem;">${EMOJIS[item.category]||'☕'}</div>`}
+            ${item.available===false?'<div style="position:absolute;inset:0;background:rgba(8,6,4,0.7);display:flex;align-items:center;justify-content:center;color:rgba(253,246,236,0.6);font-weight:700;font-size:0.85rem;letter-spacing:1px;">SOLD OUT</div>':''}
           </div>
           <div style="padding:16px;">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;">
               <div>
-                <div style="font-weight:700;font-size:0.95rem;">${item.name}</div>
-                <div style="font-size:0.78rem;color:var(--text-muted);">${item.category} · ${formatPrice(item.price)}</div>
+                <div style="font-weight:700;font-size:0.95rem;color:var(--cream);">${item.name}</div>
+                <div style="font-size:0.78rem;color:rgba(253,246,236,0.3);">${item.category} · ${formatPrice(item.price)}</div>
               </div>
-              <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--text-muted);">
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:rgba(253,246,236,0.35);">
                 <input type="checkbox" ${item.available!==false?'checked':''} onchange="toggleAvail(${item.id},this.checked)" style="width:auto;accent-color:var(--caramel);">
                 Available
               </label>
@@ -158,9 +155,8 @@ async function loadMenuMgmt() {
         </div>`;
       }).join('')}
     </div>`;
-  } catch { el.innerHTML='<p>Failed to load</p>'; }
+  } catch { el.innerHTML='<p style="color:rgba(253,246,236,0.3);">Failed to load</p>'; }
 }
-
 async function toggleAvail(id, available) {
   await fetch(`/api/admin/menu/${id}/availability`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({available})});
   Toast.show(available?'Item now available':'Item marked sold out');

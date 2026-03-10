@@ -1,19 +1,3 @@
-// ── Custom Cursor ─────────────────────────────────────────────────────────────
-(function() {
-  if (window.matchMedia('(pointer: fine)').matches) {
-    const cursor = document.createElement('div');
-    const ring = document.createElement('div');
-    cursor.className = 'cursor'; ring.className = 'cursor-ring';
-    document.body.appendChild(cursor); document.body.appendChild(ring);
-    let mx = -100, my = -100, rx = -100, ry = -100;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
-    function animRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
-    animRing();
-    document.addEventListener('mousedown', () => { cursor.style.transform = 'translate(-50%,-50%) scale(0.7)'; });
-    document.addEventListener('mouseup', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; });
-  }
-})();
-
 // ── Cart ──────────────────────────────────────────────────────────────────────
 const Cart = {
   items: JSON.parse(localStorage.getItem('brewhaus_cart') || '[]'),
@@ -91,7 +75,6 @@ function formatPrice(n) { return `₱${Number(n).toFixed(0).replace(/\B(?=(\d{3}
 function formatDate(str) { return new Date(str).toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
 const EMOJIS = { hot:'☕', cold:'🧊', blended:'🥤', food:'🥐', merch:'🛍️' };
 
-// Unsplash photo map for menu items (by name keyword)
 const ITEM_PHOTOS = {
   'espresso': 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&q=80',
   'flat white': 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&q=80',
@@ -117,6 +100,14 @@ function getItemPhoto(name) {
   return null;
 }
 
+// ── Scroll Reveal ─────────────────────────────────────────────────────────────
+function initReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
 // ── Nav ───────────────────────────────────────────────────────────────────────
 function initNav() {
   Cart.updateBadge();
@@ -140,9 +131,9 @@ function showAuthModal() {
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
     <div class="modal auth-modal" style="border-radius:24px 24px 0 0;">
-      <div style="background:var(--ink);padding:32px;text-align:center;">
+      <div style="background:var(--ink);padding:32px;text-align:center;border-bottom:1px solid var(--border);">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--caramel);font-weight:700;margin-bottom:4px;">Brewhaus</div>
-        <div style="font-size:0.8rem;color:rgba(253,246,236,0.4);letter-spacing:1px;">Your coffee, your way</div>
+        <div style="font-size:0.78rem;color:rgba(253,246,236,0.3);letter-spacing:2px;text-transform:uppercase;">Your coffee, your way</div>
       </div>
       <div style="padding:32px;">
         <div class="auth-tabs">
@@ -192,4 +183,4 @@ function showAuthModal() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', initNav);
+document.addEventListener('DOMContentLoaded', () => { initNav(); initReveal(); });

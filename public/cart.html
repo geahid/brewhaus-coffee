@@ -19,8 +19,8 @@
   </div>
 </nav>
 
-<div style="background:var(--ink);padding:40px 28px 36px;position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(200,135,58,0.07),transparent);"></div>
+<div class="page-header">
+  <div class="page-header-bg"></div>
   <div class="container" style="position:relative;">
     <div class="section-label" style="margin-bottom:10px;">Review</div>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--cream);font-weight:600;">Your Cart</h1>
@@ -32,7 +32,7 @@
     <div class="empty-state">
       <span class="icon">☕</span>
       <h3>Your cart is empty</h3>
-      <p style="margin-bottom:28px;">Add some drinks or food to get started</p>
+      <p style="margin-bottom:28px;color:rgba(253,246,236,0.35);">Add some drinks or food to get started</p>
       <a href="/menu" class="btn btn-primary" style="font-size:1rem;padding:13px 28px;">Browse Menu</a>
     </div>
   </div>
@@ -41,27 +41,27 @@
     <div>
       <div class="card" style="padding:0;">
         <div style="padding:20px 24px;border-bottom:1px solid rgba(200,135,58,0.08);display:flex;justify-content:space-between;align-items:center;">
-          <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;">Items (<span id="itemCount">0</span>)</h2>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--cream);">Items (<span id="itemCount">0</span>)</h2>
           <button class="btn btn-sm" style="color:var(--danger);border:1px solid rgba(184,58,42,0.25);background:transparent;" onclick="clearAll()">Clear All</button>
         </div>
         <div id="cartItemsList"></div>
       </div>
-      <a href="/menu" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;color:var(--caramel);text-decoration:none;font-size:0.875rem;font-weight:500;">
+      <a href="/menu" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;color:var(--caramel);text-decoration:none;font-size:0.875rem;font-weight:500;transition:color 0.2s;">
         ← Continue Shopping
       </a>
     </div>
 
     <div class="order-summary">
       <div class="card" style="padding:28px;">
-        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:20px;">Order Summary</h2>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:20px;color:var(--cream);">Order Summary</h2>
         <div class="promo-wrap">
           <input type="text" id="promoInput" placeholder="Promo code" style="text-transform:uppercase;letter-spacing:1px;">
           <button class="btn btn-outline-dark btn-sm" onclick="applyPromo()">Apply</button>
         </div>
         <div id="promoMsg" style="font-size:0.82rem;margin-bottom:12px;display:none;"></div>
-        <div class="summary-row"><span style="color:var(--text-muted);">Subtotal</span><span id="subtotalVal">₱0</span></div>
-        <div class="summary-row" id="discRow" style="display:none;color:var(--success);"><span>Discount</span><span id="discVal">-₱0</span></div>
-        <div class="summary-row"><span style="color:var(--text-muted);font-size:0.82rem;">Delivery (if applicable)</span><span style="color:var(--text-muted);font-size:0.82rem;">+₱60</span></div>
+        <div class="summary-row"><span>Subtotal</span><span id="subtotalVal">₱0</span></div>
+        <div class="summary-row" id="discRow" style="display:none;color:#34D399;"><span>Discount</span><span id="discVal">-₱0</span></div>
+        <div class="summary-row"><span style="font-size:0.82rem;color:rgba(253,246,236,0.35);">Delivery (if applicable)</span><span style="font-size:0.82rem;color:rgba(253,246,236,0.35);">+₱60</span></div>
         <div class="summary-row summary-total" style="padding-top:16px;"><span>Subtotal</span><span id="totalVal">₱0</span></div>
         <a href="/checkout" class="btn btn-primary btn-block" style="margin-top:20px;font-size:0.95rem;padding:15px;">
           Proceed to Checkout →
@@ -101,7 +101,7 @@ function renderCart() {
           <div class="cart-mods">${item.mods&&item.mods.length?item.mods.join(' · '):'Regular'}</div>
           <div class="cart-controls">
             <button class="mini-btn" onclick="updQty('${item.cartId}',${item.qty-1})">−</button>
-            <span style="font-weight:700;min-width:20px;text-align:center;">${item.qty}</span>
+            <span style="font-weight:700;min-width:20px;text-align:center;color:var(--cream);">${item.qty}</span>
             <button class="mini-btn" onclick="updQty('${item.cartId}',${item.qty+1})">+</button>
             <button class="remove-btn" onclick="rmItem('${item.cartId}')">✕ Remove</button>
           </div>
@@ -122,9 +122,9 @@ function applyPromo() {
   const code = document.getElementById('promoInput').value.trim().toUpperCase();
   const msg = document.getElementById('promoMsg');
   msg.style.display = 'block';
-  if (code === 'BREW10') { appliedPromo = code; msg.style.color='var(--success)'; msg.textContent='✓ 10% off applied!'; localStorage.setItem('brewhaus_promo',code); }
-  else if (code === 'WELCOME') { appliedPromo = code; msg.style.color='var(--success)'; msg.textContent='✓ ₱50 discount applied!'; localStorage.setItem('brewhaus_promo',code); }
-  else { appliedPromo=null; msg.style.color='var(--danger)'; msg.textContent='✕ Invalid promo code'; localStorage.removeItem('brewhaus_promo'); }
+  if (code === 'BREW10') { appliedPromo = code; msg.style.color='#34D399'; msg.textContent='✓ 10% off applied!'; localStorage.setItem('brewhaus_promo',code); }
+  else if (code === 'WELCOME') { appliedPromo = code; msg.style.color='#34D399'; msg.textContent='✓ ₱50 discount applied!'; localStorage.setItem('brewhaus_promo',code); }
+  else { appliedPromo=null; msg.style.color='#F87171'; msg.textContent='✕ Invalid promo code'; localStorage.removeItem('brewhaus_promo'); }
   renderCart();
 }
 

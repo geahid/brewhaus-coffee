@@ -18,10 +18,10 @@
   </div>
 </nav>
 
-<div style="background:var(--ink);padding:40px 28px 36px;position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(200,135,58,0.07),transparent);"></div>
+<div class="page-header">
+  <div class="page-header-bg"></div>
   <div class="container" style="position:relative;">
-    <a href="/cart" style="color:rgba(253,246,236,0.4);text-decoration:none;font-size:0.85rem;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;">← Back to Cart</a>
+    <a href="/cart" style="color:rgba(253,246,236,0.35);text-decoration:none;font-size:0.85rem;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;transition:color 0.2s;" onmouseover="this.style.color='var(--caramel)'" onmouseout="this.style.color='rgba(253,246,236,0.35)'">← Back to Cart</a>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--cream);font-weight:600;">Checkout</h1>
   </div>
 </div>
@@ -32,9 +32,8 @@
   </div>
   <div class="checkout-layout" id="checkoutWrap">
     <div>
-      <!-- Order type -->
       <div class="card" style="padding:28px;margin-bottom:24px;">
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;">How do you want it?</h3>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;color:var(--cream);">How do you want it?</h3>
         <div class="type-grid">
           <div class="type-card active" id="pickupCard" onclick="setType('pickup')">
             <div class="ticon">🏠</div><div class="tlabel">Pick Up</div><div class="tsub">Ready in ~15 min</div>
@@ -58,9 +57,8 @@
         </div>
       </div>
 
-      <!-- Contact -->
       <div class="card" style="padding:28px;margin-bottom:24px;">
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;">Contact Details</h3>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;color:var(--cream);">Contact Details</h3>
         <div class="form-row">
           <div class="form-group"><label>First Name</label><input type="text" id="fname" placeholder="Juan"></div>
           <div class="form-group"><label>Last Name</label><input type="text" id="lname" placeholder="dela Cruz"></div>
@@ -69,33 +67,31 @@
         <div class="form-group"><label>Email (receipt)</label><input type="email" id="email" placeholder="you@email.com"></div>
       </div>
 
-      <!-- Payment -->
       <div class="card" style="padding:28px;">
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;">Payment Method</h3>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:18px;color:var(--cream);">Payment Method</h3>
         <div class="pay-grid">
           <div class="pay-card active" data-m="cash" onclick="setPay(this)">💵 Cash</div>
           <div class="pay-card" data-m="gcash" onclick="setPay(this)">📱 GCash</div>
           <div class="pay-card" data-m="maya" onclick="setPay(this)">💳 Maya</div>
           <div class="pay-card" data-m="card" onclick="setPay(this)">🏦 Card</div>
         </div>
-        <div id="gcashBox" style="display:none;" class="info-box"><strong>GCash:</strong> 0917 123 4567<br><span style="color:var(--text-muted);font-size:0.82rem;">Send payment before completing order.</span></div>
-        <div id="mayaBox" style="display:none;" class="info-box"><strong>Maya:</strong> 0917 987 6543<br><span style="color:var(--text-muted);font-size:0.82rem;">Include order number as reference.</span></div>
+        <div id="gcashBox" style="display:none;" class="info-box"><strong style="color:var(--cream);">GCash:</strong> 0917 123 4567<br><span style="color:rgba(253,246,236,0.4);font-size:0.82rem;">Send payment before completing order.</span></div>
+        <div id="mayaBox" style="display:none;" class="info-box"><strong style="color:var(--cream);">Maya:</strong> 0917 987 6543<br><span style="color:rgba(253,246,236,0.4);font-size:0.82rem;">Include order number as reference.</span></div>
       </div>
     </div>
 
-    <!-- Summary -->
     <div style="position:sticky;top:84px;">
       <div class="card" style="padding:28px;">
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:20px;">Order Summary</h3>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:20px;color:var(--cream);">Order Summary</h3>
         <div id="summaryItems"></div>
         <div style="border-top:1px solid rgba(200,135,58,0.1);margin:16px 0;padding-top:16px;">
-          <div class="summary-row"><span style="color:var(--text-muted);">Subtotal</span><span id="sumSub">₱0</span></div>
-          <div class="summary-row" id="sumDiscRow" style="display:none;color:var(--success);"><span>Discount (<span id="promoLbl"></span>)</span><span id="sumDisc"></span></div>
+          <div class="summary-row"><span>Subtotal</span><span id="sumSub">₱0</span></div>
+          <div class="summary-row" id="sumDiscRow" style="display:none;color:#34D399;"><span>Discount (<span id="promoLbl"></span>)</span><span id="sumDisc"></span></div>
           <div class="summary-row" id="sumDelRow" style="display:none;"><span>Delivery</span><span>₱60</span></div>
-          <div class="summary-row summary-total"><span>Total</span><span id="sumTotal">₱0</span></div>
+          <div class="summary-row summary-total"><span>Total</span><span id="sumTotal" style="color:var(--caramel);">₱0</span></div>
         </div>
         <button class="btn btn-primary btn-block" style="font-size:1rem;padding:16px;" id="placeBtn" onclick="placeOrder()">Place Order ✓</button>
-        <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:12px;">By ordering you agree to our terms of service.</p>
+        <p style="font-size:0.75rem;color:rgba(253,246,236,0.25);text-align:center;margin-top:12px;">By ordering you agree to our terms of service.</p>
       </div>
     </div>
   </div>
@@ -115,20 +111,17 @@ function setType(t) {
   document.getElementById('sumDelRow').style.display=t==='delivery'?'flex':'none';
   calcTotal();
 }
-
 function setPay(el) {
   document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('active'));
   el.classList.add('active'); payMethod=el.dataset.m;
   document.getElementById('gcashBox').style.display=payMethod==='gcash'?'block':'none';
   document.getElementById('mayaBox').style.display=payMethod==='maya'?'block':'none';
 }
-
 function getDiscount(sub) {
   if (promo==='BREW10') return Math.floor(sub*0.1);
   if (promo==='WELCOME') return 50;
   return 0;
 }
-
 function calcTotal() {
   const sub=Cart.subtotal, disc=getDiscount(sub), del=orderType==='delivery'?60:0;
   document.getElementById('sumSub').textContent=formatPrice(sub);
@@ -136,22 +129,20 @@ function calcTotal() {
   const dr=document.getElementById('sumDiscRow');
   if (disc>0&&promo) { dr.style.display='flex'; document.getElementById('sumDisc').textContent=`-${formatPrice(disc)}`; document.getElementById('promoLbl').textContent=promo; }
 }
-
 function renderSummaryItems() {
   const el=document.getElementById('summaryItems');
   el.innerHTML=Cart.items.map(i=>`
-    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(200,135,58,0.06);gap:10px;">
+    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(200,135,58,0.07);gap:10px;">
       <div style="display:flex;gap:10px;align-items:center;">
         <span style="font-size:1.2rem;">${EMOJIS[i.category]||'☕'}</span>
         <div>
-          <div style="font-weight:600;font-size:0.875rem;">${i.name} × ${i.qty}</div>
-          ${i.mods&&i.mods.length?`<div style="font-size:0.75rem;color:var(--text-muted);">${i.mods.join(' · ')}</div>`:''}
+          <div style="font-weight:600;font-size:0.875rem;color:var(--cream);">${i.name} × ${i.qty}</div>
+          ${i.mods&&i.mods.length?`<div style="font-size:0.75rem;color:rgba(253,246,236,0.35);">${i.mods.join(' · ')}</div>`:''}
         </div>
       </div>
-      <span style="font-weight:700;font-size:0.9rem;white-space:nowrap;">${formatPrice(i.totalPrice*i.qty)}</span>
+      <span style="font-weight:700;font-size:0.9rem;white-space:nowrap;color:var(--caramel);">${formatPrice(i.totalPrice*i.qty)}</span>
     </div>`).join('');
 }
-
 async function placeOrder() {
   const fname=document.getElementById('fname').value.trim();
   const lname=document.getElementById('lname').value.trim();
@@ -161,22 +152,10 @@ async function placeOrder() {
   if (orderType==='delivery'&&!document.getElementById('delAddr').value.trim()) { Toast.show('Enter delivery address','error'); return; }
   const btn=document.getElementById('placeBtn'); btn.disabled=true; btn.textContent='Placing Order...';
   try {
-    const res=await fetch('/api/orders',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        items:Cart.items,
-        customer:{firstName:fname,lastName:lname,name:`${fname} ${lname}`,phone,email},
-        paymentMethod:payMethod, orderType,
-        pickupTime:orderType==='pickup'?document.getElementById('pickupTime').value:null,
-        address:orderType==='delivery'?document.getElementById('delAddr').value.trim():null,
-        promoCode:promo||null
-      })
-    });
+    const res=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:Cart.items,customer:{firstName:fname,lastName:lname,name:`${fname} ${lname}`,phone,email},paymentMethod:payMethod,orderType,pickupTime:orderType==='pickup'?document.getElementById('pickupTime').value:null,address:orderType==='delivery'?document.getElementById('delAddr').value.trim():null,promoCode:promo||null})});
     const data=await res.json();
-    if (data.order) {
-      Cart.clear(); localStorage.removeItem('brewhaus_promo');
-      window.location.href=`/orders?id=${data.order.id}`;
-    } else { Toast.show(data.error||'Order failed','error'); btn.disabled=false; btn.textContent='Place Order ✓'; }
+    if (data.order) { Cart.clear(); localStorage.removeItem('brewhaus_promo'); window.location.href=`/orders?id=${data.order.id}`; }
+    else { Toast.show(data.error||'Order failed','error'); btn.disabled=false; btn.textContent='Place Order ✓'; }
   } catch { Toast.show('Network error','error'); btn.disabled=false; btn.textContent='Place Order ✓'; }
 }
 
